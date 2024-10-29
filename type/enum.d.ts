@@ -1,8 +1,8 @@
 /**
+ * Abstract base class for creating enumeration types in JavaScript
  * @abstract
- * @class Enum
- * @description Abstract base class for creating enumeration types in JavaScript
  * @example
+ * ```js
  * class Color extends Enum {
  *   static RED = new Color('RED', '#FF0000');
  *   static GREEN = new Color('GREEN', '#00FF00');
@@ -12,12 +12,9 @@
  *     this.freeze();
  *   }
  * }
+ * ```
  */
 export class Enum {
-    /** @private @static @type {Map<Function, Map<string, Enum>>} */
-    private static "__#1@#instances";
-    /** @private @static @type {Set<Function>} */
-    private static "__#1@#frozen";
     /**
      * Gets the number of constants in the enum
      * @returns {number} The number of enum constants

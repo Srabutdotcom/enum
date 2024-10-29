@@ -1,3 +1,6 @@
+// deno-lint-ignore-file no-slow-types
+// @ts-self-types="../type/signaturescheme.d.ts"
+
 import { Enum } from "./enum.js";
 
 /**
@@ -39,11 +42,22 @@ export class SignatureScheme extends Enum {
    static PRIVATE_USE = new SignatureScheme('PRIVATE_USE', 0xFFFF);
    */
 
+   
+   /**
+    * check octet and return valid SignatureScheme 
+    *
+    * @static
+    * @param {Uint8Array} octet
+    * @returns {SignatureScheme}
+    */
    static parse(octet) {
       const value = octet[0]*256 + octet[1]
       return SignatureScheme.fromValue(value) ?? Error(`Unknown ${value} SignatureScheme type`);
    }
 
+   /**return 16 */
    get bit() { return 16 }
 
 }
+
+// npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

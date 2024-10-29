@@ -2,10 +2,10 @@
 // @ts-self-types="../type/enum.d.ts"
 
 /**
+ * Abstract base class for creating enumeration types in JavaScript
  * @abstract
- * @class Enum
- * @description Abstract base class for creating enumeration types in JavaScript
  * @example
+ * ```js
  * class Color extends Enum {
  *   static RED = new Color('RED', '#FF0000');
  *   static GREEN = new Color('GREEN', '#00FF00');
@@ -15,6 +15,7 @@
  *     this.freeze();
  *   }
  * }
+ * ```
  */
 export class Enum {
    /** @private @static @type {Map<Function, Map<string, Enum>>} */
