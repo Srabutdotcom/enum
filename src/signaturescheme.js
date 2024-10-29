@@ -1,8 +1,8 @@
 import { Enum } from "./enum.js";
 
 /**
- * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.3
  * Enumeration of signature schemes as defined in RFC 8446.
+ * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.3
  */
 export class SignatureScheme extends Enum {
    /* RSASSA-PKCS1-v1_5 algorithms */
