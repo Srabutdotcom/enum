@@ -1,7 +1,7 @@
 {
   "name": "@tls/enum",
   "version": "0.0.1",
-  "exports": "./src/mod.js",
+  "exports": "./src/mod.ts",
   "publish": {
     "exclude": ["dist/"]
   },
