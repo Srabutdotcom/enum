@@ -21,12 +21,12 @@ export class NamedGroup extends Enum {
    static FFDHE6144 = new NamedGroup('FFDHE6144', 0x0103);
    static FFDHE8192 = new NamedGroup('FFDHE8192', 0x0104);
    /**
-       * check octet and return valid SignatureScheme 
-       *
-       * @static
-       * @param {Uint8Array} octet
-       * @returns {NamedGroup}
-       */
+    * check octet and return valid NamedGroup 
+    *
+    * @static
+    * @param {Uint8Array} octet
+    * @returns {NamedGroup}
+    */
    static parse(octet) {
       const value = octet[0] * 256 + octet[1]
       return NamedGroup.fromValue(value) ?? Error(`Unknown ${value} NamedGroup type`);
