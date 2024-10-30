@@ -9,4 +9,3 @@ for (const e of codes) {
    console.log(`name: ${parse.name} value: ${parse.value}`)
 }
 
-debugger;

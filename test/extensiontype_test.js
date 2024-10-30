@@ -8,5 +8,3 @@ for (const e of codes) {
    const parse = ExtensionType.parse(new Uint8Array([Math.floor(e / 256), e % 256]))
    console.log(`name: ${parse.name} value: ${parse.value}`)
 }
-
-debugger;
