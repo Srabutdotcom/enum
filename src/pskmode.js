@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-slow-types
-// @ts-self-types="../type/namedgroup.d.ts"
+// @ts-self-types="../type/pskmode.d.ts"
 
 import { Enum } from "./enum.js";
 
 /**
- * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
+ * PskKeyExchangeMode - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.4.2
  */
 export class PskKeyExchangeMode  extends Enum {
    /**psk_ke:  PSK-only key establishment.  In this mode, the server
