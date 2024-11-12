@@ -1,4 +1,4 @@
-import { AlertDescription } from "../src/alert.js";
+import { Alert, AlertDescription } from "../src/alert.js";
 import { assertEquals } from "jsr:@std/assert";
 
 Deno.test(
@@ -44,4 +44,13 @@ Deno.test(
       assertEquals(AlertDescription.values().map(e => e.value).sort((a, b) => a - b), tls13AlertDescriptionValues);
    }
 )
+
+Deno.test("Alert creation from AlertDescription", () => {
+
+   const alert = AlertDescription.BAD_RECORD_MAC.alert();
+   const back = Alert.from(alert)
+   assertEquals(+alert.level, 2);
+   assertEquals(+alert.description, 20);
+   assertEquals(alert, back);
+});
 

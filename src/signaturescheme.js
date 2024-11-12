@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/signaturescheme.d.ts"
 
+import { Uint16, Constrained } from "./dep.js";
 import { Enum } from "./enum.js";
 
 /**
@@ -42,22 +43,84 @@ export class SignatureScheme extends Enum {
    static PRIVATE_USE = new SignatureScheme('PRIVATE_USE', 0xFFFF);
    */
 
-   
    /**
-    * check octet and return valid SignatureScheme 
-    *
+    * Parses an octet array and returns a valid SignatureScheme.
+    * 
     * @static
-    * @param {Uint8Array} octet
-    * @returns {SignatureScheme}
+    * @param {Uint8Array} octet - The octet array to parse.
+    * @returns {SignatureScheme} The corresponding SignatureScheme instance.
+    * @throws {Error} If the octet does not correspond to a known SignatureScheme.
     */
    static parse(octet) {
-      const value = octet[0]*256 + octet[1]
+      const value = octet[0] * 256 + octet[1];
       return SignatureScheme.fromValue(value) ?? Error(`Unknown ${value} SignatureScheme type`);
    }
 
-   /**return 16 */
-   get bit() { return 16 }
+   /** 
+    * Returns the bit length of the SignatureScheme.
+    * @returns {number} The bit length, which is always 16.
+    */
+   get bit() { return 16; }
 
+   /**
+    * Converts the SignatureScheme to a Uint16 representation.
+    * 
+    * @returns {Uint16} The Uint16 representation of the SignatureScheme.
+    */
+   toUint16() { return Uint16.fromValue(+this); }
 }
+
+/**
+ * Represents a list of supported signature schemes.
+ */
+export class SignatureSchemeList extends Constrained {
+   supported_signature_algorithms;
+
+   /**
+    * Creates a SignatureSchemeList instance from the provided signature schemes.
+    * 
+    * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
+    */
+   constructor(...signatureScheme) {
+      super(2, 65534, ...signatureScheme.map(e => e.toUint16()));
+      this.supported_signature_algorithms = signatureScheme;
+   }
+
+   /**
+    * Creates a SignatureSchemeList from the provided signature schemes.
+    * 
+    * @static
+    * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
+    * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
+    */
+   static fromSchemes(...signatureScheme) {
+      return new SignatureSchemeList(...signatureScheme);
+   }
+
+   /**
+    * Creates a SignatureSchemeList from a Uint8Array.
+    * 
+    * @static
+    * @param {Uint8Array} array - The array to parse into a SignatureSchemeList.
+    * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
+    * @throws {Error} If the length of the array is invalid.
+    */
+   static from(array) {
+      const arrayCopy = new Uint8Array(array);
+      const length = Uint16.from(arrayCopy.subarray(0, 2)).value();
+      // Validate length against array size
+      if (length + 2 > arrayCopy.length) {
+         throw new Error('Invalid SignatureSchemeList length');
+      }
+      
+      const signatureSchemes = [];
+      for (let i = 2; i < length + 2; i += 2) {
+         signatureSchemes.push(SignatureScheme.parse(arrayCopy.subarray(i, i + 2)));
+      }
+      return SignatureSchemeList.fromSchemes(...signatureSchemes);
+   }
+}
+
+
 
 // npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

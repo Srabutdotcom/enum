@@ -153,4 +153,37 @@ export class AlertDescription extends Enum {
     get bit(): number;
     get level(): AlertLevel;
 }
+declare class Alert extends Uint8Array {
+    /**
+     * The alert level (0 for warning, 1 for fatal).
+     */
+    level: AlertLevel;
+ 
+    /**
+     * The alert description instance, providing details about the alert.
+     */
+    description: AlertDescription;
+ 
+    /**
+     * Creates an instance of the Alert class.
+     * @param level - The alert level.
+     * @param description - The alert description instance.
+     */
+    constructor(level: number, description: AlertDescription);
+ 
+    /**
+     * Creates an Alert instance from an AlertDescription.
+     * @param description - The alert description to use for creating the Alert.
+     * @returns A new Alert instance.
+     */
+    static fromAlertDescription(description: AlertDescription): Alert;
+ 
+    /**
+     * Creates an Alert instance from a Uint8Array.
+     * @param array - The array representing the Alert.
+     * @returns A new Alert instance created from the provided array.
+     * @throws If the input array is invalid or does not contain enough elements.
+     */
+    static from(array: Uint8Array): Alert;
+ }
 import { Enum } from "../src/enum.js";

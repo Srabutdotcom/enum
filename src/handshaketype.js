@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/handshaketype.d.ts"
 import { Enum } from "./enum.js";
+import { Struct, Uint24 } from "./dep.js";
 
 /**
  * Represents TLS 1.3 Handshake message types as defined in RFC 8446 Section 4
@@ -98,6 +99,81 @@ export class HandshakeType extends Enum {
 
    /**return 8 */
    get bit(){return 8}
+
+   handshake(message){
+      return Handshake.fromMessage(this, message)
+   }
+}
+
+export class Handshake extends Struct {
+   msg_type
+   message
+   static fromMessage(msg_type, message){
+      return new Handshake(msg_type, Uint24.fromValue(message.length), message)
+   }
+   static from(array){
+      const msg_type = HandshakeType.fromValue(array[0]);
+      const length = Uint24.from(array.subarray(1,3));
+      const message = array.subarray(3, 3 + length.value())
+      return new Handshake(msg_type, length, message)
+   }
+   constructor(msg_type, length, message){
+      super(+msg_type, length, message)
+      this.msg_type = msg_type;
+      this.message = message
+   }
+}
+
+export class ClientHello extends Struct {
+   legacy_version;
+   random;
+   legacy_session;
+   cipher_suites;
+   legacy_compression_methods;
+   extensions;
+   constructor(
+      legacy_version, 
+      random, 
+      legacy_session,
+      cipher_suites, 
+      legacy_compression_methods, 
+      extensions
+   ){
+      super(
+         legacy_version, 
+         random, 
+         legacy_session,
+         cipher_suites, 
+         legacy_compression_methods, 
+         extensions
+      )
+   }
+}
+
+export class ServerHello extends Struct {
+   legacy_version;
+   random;
+   legacy_session_id_echo;
+   cipher_suite;
+   legacy_compression_method ; // Uint8 = 0
+   extensions;
+   constructor(
+      legacy_version, 
+      random, 
+      legacy_session_id_echo,
+      cipher_suite, 
+      legacy_compression_method, 
+      extensions
+   ){
+      super(
+         legacy_version, 
+         random, 
+         legacy_session_id_echo,
+         cipher_suite, 
+         legacy_compression_method, 
+         extensions
+      )
+   }
 }
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

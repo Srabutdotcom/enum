@@ -1,3 +1,4 @@
+import { Uint16, Constrained } from "../src/dep.js";
 /**
  * Version class representing different protocol versions.
  * Extends Enum to provide constants for SSL and TLS versions.
@@ -40,14 +41,14 @@ export class Version extends Enum {
      *
      * @static
      * @param {Uint8Array} octet - The 2-byte array representing a version value.
-     * @returns {Version} The matching Version instance, or throws an error if not found.
+     * @returns {Version} The matching Version instance.
      * @throws {Error} If the version type in octet is unknown.
      */
     static parse(octet: Uint8Array): Version;
     /**
      * Gets the bit size of the version (16 bits).
      *
-     * @returns {number} - The bit size of the version.
+     * @returns {number} The bit size of the version.
      */
     get bit(): number;
     /**
@@ -61,7 +62,18 @@ export class Version extends Enum {
  * Represents a Protocol Version as a 16-bit unsigned integer.
  * Extends Uint16 to handle 2-byte representations of protocol versions.
  */
-export class ProtocolVersion {
+export class ProtocolVersion extends Uint16 {
+    /**
+     * Creates a ProtocolVersion instance from a Version.
+     *
+     * @param {Version | number} version - A `Version` instance or a version number (as a 16-bit integer).
+     */
+    constructor(version: Version | number);
+    /**
+     * The `Version` instance associated with this `ProtocolVersion`.
+     * @type {Version}
+     */
+    version: Version;
     /**
      * Creates a new ProtocolVersion from a Version instance.
      *
@@ -79,16 +91,41 @@ export class ProtocolVersion {
      * @throws {Error} If the array does not represent a valid Version.
      */
     static from(array: Uint8Array): ProtocolVersion;
+}
+/**
+ * Represents the selected protocol version.
+ * @type {ProtocolVersion}
+ */
+export var Selected_version: ProtocolVersion;
+/**
+ * Class representing a collection of protocol versions.
+ * Extends Constrained to enforce limits on the number of versions.
+ */
+export class Versions extends Constrained {
     /**
-     * Creates a ProtocolVersion instance from a Version.
+     * Creates a new Versions instance from provided versions.
      *
-     * @param {Version|number} version - A `Version` instance or a version number (as a 16-bit integer).
+     * @static
+     * @param {...Version} versions - The versions to include in the collection.
+     * @returns {Versions} A new Versions instance.
      */
-    constructor(version: Version | number);
+    static fromVersions(...versions: Version[]): Versions;
     /**
-     * The `Version` instance associated with this `ProtocolVersion`.
-     * @type {Version}
+     * Creates a default Versions instance with TLS 1.2 and TLS 1.3.
+     *
+     * @static
+     * @returns {Versions} A new Versions instance with default versions.
      */
-    version: Version;
+    static default(): Versions;
+    constructor(...versions: Version[]);
+    /**
+     * Parses a Uint8Array and creates a Versions instance.
+     *
+     * @static
+     * @param {Uint8Array} array - A byte array representing protocol versions.
+     * @returns {Versions} A new Versions instance based on the parsed array.
+     * @throws {Error} If the array does not represent valid versions.
+     */
+    static from(array: Uint8Array): Versions;
 }
 import { Enum } from "../type/enum.d.ts";

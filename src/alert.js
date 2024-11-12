@@ -211,6 +211,51 @@ export class AlertDescription extends Enum {
       if(warning.includes(this.value))return AlertLevel.WARNING
       return AlertLevel.FATAL
    }
+   alert(){
+      return Alert.fromAlertDescription(this)
+   }
 }
+
+/**
+ * Represents an alert in the TLS protocol.
+ * Extends Uint8Array to store alert information in a binary format.
+ */
+export class Alert extends Uint8Array {
+   level
+   description
+   /**
+    * Creates an Alert from an AlertDescription.
+    * @param {AlertDescription} description - The alert description.
+    * @returns {Alert} The created Alert instance.
+    */
+   static fromAlertDescription(description){
+      return new Alert(description.level, description)
+   }
+   /**
+    * Creates an Alert from a Uint8Array.
+    * @param {Uint8Array} array - The array representing the Alert.
+    * @returns {Alert} The created Alert instance.
+    * @throws {Error} If the input array is invalid.
+    */
+   static from(array){
+      if (array.length < 2) {
+         throw new Error("Input array must have at least 2 elements.");
+      }
+      const description = AlertDescription.fromValue(array[1]);
+      return new Alert(description.level, description)
+   }
+   /**
+    * @param {number} level - The alert level.
+    * @param {AlertDescription} description - The alert description instance.
+    */
+   constructor(level, description){
+      super(2);
+      this[0] = +level;
+      this[1] = +description;
+      this.level = level
+      this.description = description
+   }
+}
+
 
 //npx -p typescript tsc ./src/alert.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
