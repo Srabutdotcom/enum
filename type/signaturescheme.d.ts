@@ -37,7 +37,7 @@ export class SignatureScheme extends Enum {
      * @returns {SignatureScheme} The corresponding SignatureScheme instance.
      * @throws {Error} If the octet does not correspond to a known SignatureScheme.
      */
-    static parse(octet: Uint8Array): SignatureScheme;
+    static from(octet: Uint8Array): SignatureScheme;
 
     /** Returns the bit length of the SignatureScheme. */
     get bit(): number;

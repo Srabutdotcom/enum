@@ -16,7 +16,7 @@ export class CertificateType  extends Enum {
     * @param {Uint8Array} octet
     * @returns {CertificateType }
     */
-   static parse(octet) {
+   static from(octet) {
       return CertificateType.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} CertificateType type`);
    }
 

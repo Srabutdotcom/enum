@@ -20,7 +20,7 @@ export class KeyUpdateRequest  extends Enum {
     * @param {Uint8Array} octet
     * @returns {KeyUpdateRequest }
     */
-   static parse(octet) {
+   static from(octet) {
       return KeyUpdateRequest.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} KeyUpdateRequest type`);
    }
 

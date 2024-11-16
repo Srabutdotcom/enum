@@ -16,7 +16,7 @@ export class PskKeyExchangeMode extends Enum {
      * @param {Uint8Array} octet
      * @returns {PskKeyExchangeMode }
      */
-    static parse(octet: Uint8Array): PskKeyExchangeMode;
+    static from(octet: Uint8Array): PskKeyExchangeMode;
     /**return 8 */
     get bit(): number;
 }

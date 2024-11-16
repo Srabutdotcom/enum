@@ -51,7 +51,7 @@ export class SignatureScheme extends Enum {
     * @returns {SignatureScheme} The corresponding SignatureScheme instance.
     * @throws {Error} If the octet does not correspond to a known SignatureScheme.
     */
-   static parse(octet) {
+   static from(octet) {
       const value = octet[0] * 256 + octet[1];
       return SignatureScheme.fromValue(value) ?? Error(`Unknown ${value} SignatureScheme type`);
    }
@@ -107,7 +107,7 @@ export class SignatureSchemeList extends Constrained {
     */
    static from(array) {
       const arrayCopy = new Uint8Array(array);
-      const length = Uint16.from(arrayCopy.subarray(0, 2)).value();
+      const length = Uint16.from(arrayCopy.subarray(0, 2)).value;
       // Validate length against array size
       if (length + 2 > arrayCopy.length) {
          throw new Error('Invalid SignatureSchemeList length');
@@ -115,7 +115,7 @@ export class SignatureSchemeList extends Constrained {
       
       const signatureSchemes = [];
       for (let i = 2; i < length + 2; i += 2) {
-         signatureSchemes.push(SignatureScheme.parse(arrayCopy.subarray(i, i + 2)));
+         signatureSchemes.push(SignatureScheme.from(arrayCopy.subarray(i, i + 2)));
       }
       return SignatureSchemeList.fromSchemes(...signatureSchemes);
    }

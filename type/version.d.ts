@@ -44,7 +44,7 @@ export class Version extends Enum {
      * @returns {Version} The matching Version instance.
      * @throws {Error} If the version type in octet is unknown.
      */
-    static parse(octet: Uint8Array): Version;
+    static from(octet: Uint8Array): Version;
     /**
      * Gets the bit size of the version (16 bits).
      *

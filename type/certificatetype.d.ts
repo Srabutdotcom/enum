@@ -11,7 +11,7 @@ export class CertificateType extends Enum {
      * @param {Uint8Array} octet
      * @returns {CertificateType }
      */
-    static parse(octet: Uint8Array): CertificateType;
+    static from(octet: Uint8Array): CertificateType;
     /**return 8 */
     get bit(): number;
 }

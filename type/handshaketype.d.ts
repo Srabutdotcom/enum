@@ -75,7 +75,7 @@ export class HandshakeType extends Enum {
      * @param {Uint8Array} octet - 8 bit or 1 octet
      * @returns {HandshakeType}
      */
-    static parse(octet: Uint8Array): HandshakeType;
+    static from(octet: Uint8Array): HandshakeType;
     /**return 8 */
     get bit(): number;
 }

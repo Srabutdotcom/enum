@@ -24,7 +24,7 @@ export class ContentType extends Enum {
     * @param {Uint8Array} octet
     * @returns {ContentType }
     */
-   static parse(octet) {
+   static from(octet) {
       return ContentType.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} ContentType type`);
    }
 

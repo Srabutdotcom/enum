@@ -57,7 +57,7 @@ export class Version extends Enum {
     * @returns {Version} The matching Version instance.
     * @throws {Error} If the version type in octet is unknown.
     */
-   static parse(octet) {
+   static from(octet) {
       const value = octet[0] * 256 + octet[1];
       return Version.fromValue(value) ?? Error(`Unknown ${value} Version type`);
    }
@@ -118,7 +118,7 @@ export class ProtocolVersion extends Uint16 {
     * @throws {Error} If the array does not represent a valid Version.
     */
    static from(array){
-      const version = Version.parse(array);
+      const version = Version.from(array);
       return ProtocolVersion.fromVersion(version);
    }
 }
@@ -160,7 +160,7 @@ export class Versions extends Constrained {
 
       const versions = []
       for (let i = 1; i < length + 1; i += 2) {
-         versions.push(Version.parse(arrayCopy.subarray(i, i + 2)))
+         versions.push(Version.from(arrayCopy.subarray(i, i + 2)))
       }
 
       return Versions.fromVersions(...versions)

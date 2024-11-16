@@ -22,7 +22,7 @@ export class AlertLevel extends Enum {
     * @param {Uint8Array} octet
     * @returns {AlertLevel }
     */
-   static parse(octet) {
+   static from(octet) {
       return AlertLevel.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} AlertLevel type`);
    }
 
@@ -189,7 +189,7 @@ export class AlertDescription extends Enum {
     * @param {Uint8Array} octet
     * @returns {AlertDescription }
     */
-   static parse(octet) {
+   static from(octet) {
       return AlertDescription.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} AlertDescription type`);
    }
 

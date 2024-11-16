@@ -21,7 +21,7 @@ export class PskKeyExchangeMode  extends Enum {
     * @param {Uint8Array} octet
     * @returns {PskKeyExchangeMode }
     */
-   static parse(octet) {
+   static from(octet) {
       return PskKeyExchangeMode.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} PskKeyExchangeMode type`);
    }
 

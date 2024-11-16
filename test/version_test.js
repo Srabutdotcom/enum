@@ -34,7 +34,7 @@ Deno.test("Version Class - parse method", () => {
   ];
 
   validUint8Arrays.forEach(({ array, expected }) => {
-    const result = Version.parse(array);
+    const result = Version.from(array);
     assertEquals(result, expected, `Expected ${result} to be ${expected}`);
   });
 

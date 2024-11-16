@@ -18,7 +18,7 @@ export class ContentType extends Enum {
      * @param {Uint8Array} octet
      * @returns {ContentType }
      */
-    static parse(octet: Uint8Array): ContentType;
+    static from(octet: Uint8Array): ContentType;
     /**return 8 */
     get bit(): number;
 }

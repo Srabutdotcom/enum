@@ -14,7 +14,7 @@ export class AlertLevel extends Enum {
      * @param {Uint8Array} octet
      * @returns {AlertLevel }
      */
-    static parse(octet: Uint8Array): AlertLevel;
+    static from(octet: Uint8Array): AlertLevel;
     /**return 8 */
     get bit(): number;
 }
@@ -148,7 +148,7 @@ export class AlertDescription extends Enum {
      * @param {Uint8Array} octet
      * @returns {AlertDescription }
      */
-    static parse(octet: Uint8Array): AlertDescription;
+    static from(octet: Uint8Array): AlertDescription;
     /**return 8 */
     get bit(): number;
     get level(): AlertLevel;

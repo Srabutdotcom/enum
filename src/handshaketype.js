@@ -93,7 +93,7 @@ export class HandshakeType extends Enum {
     * @param {Uint8Array} octet - 8 bit or 1 octet
     * @returns {HandshakeType}
     */
-   static parse(octet) {
+   static from(octet) {
       return HandshakeType.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} handshake type`);
    }
 
@@ -114,7 +114,7 @@ export class Handshake extends Struct {
    static from(array){
       const msg_type = HandshakeType.fromValue(array[0]);
       const length = Uint24.from(array.subarray(1,3));
-      const message = array.subarray(3, 3 + length.value())
+      const message = array.subarray(3, 3 + length.value)
       return new Handshake(msg_type, length, message)
    }
    constructor(msg_type, length, message){

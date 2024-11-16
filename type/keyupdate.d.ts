@@ -15,7 +15,7 @@ export class KeyUpdateRequest extends Enum {
      * @param {Uint8Array} octet
      * @returns {KeyUpdateRequest }
      */
-    static parse(octet: Uint8Array): KeyUpdateRequest;
+    static from(octet: Uint8Array): KeyUpdateRequest;
     /**return 8 */
     get bit(): number;
 }
