@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/extensiontype.d.ts"
 
-import { Uint16 } from "./dep.ts";
+import { Uint16, Extension } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
