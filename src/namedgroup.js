@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/namedgroup.d.ts"
 
-import { Constrained, p256, p384, p521, Struct, Uint16, Byte, x25519, x448 } from "./dep.js";
+import { Constrained, p256, p384, p521, Struct, Uint16, Byte, x25519, x448 } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**

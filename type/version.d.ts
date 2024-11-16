@@ -1,4 +1,4 @@
-import { Uint16, Constrained } from "../src/dep.js";
+import { Uint16, Constrained } from "../src/dep.ts";
 /**
  * Version class representing different protocol versions.
  * Extends Enum to provide constants for SSL and TLS versions.

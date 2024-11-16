@@ -1,5 +1,5 @@
 import { Enum } from "./enum.d.ts";
-import { Constrained, Struct, Uint16 } from "../src/dep.js";
+import { Constrained, Struct, Uint16 } from "../src/dep.ts";
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
  */

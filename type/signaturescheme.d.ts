@@ -1,5 +1,5 @@
 import { Enum } from "./enum.d.ts"
-import { Uint16, Constrained } from "../src/dep.js";
+import { Uint16, Constrained } from "../src/dep.ts";
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.3

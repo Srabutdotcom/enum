@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/signaturescheme.d.ts"
 
-import { Uint16, Constrained } from "./dep.js";
+import { Uint16, Constrained } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**

@@ -1,6 +1,6 @@
-import { Uint16 } from "../src/dep.js";
+import { Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
-import { Extension } from "../src/dep.js";
+import { Extension } from "../src/dep.ts";
 
 /**
  * Represents different TLS extension types.

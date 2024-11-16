@@ -2,7 +2,7 @@
 // @ts-self-types="../type/version.d.ts"
 
 import { Enum } from "./enum.js";
-import { Uint16, Constrained } from "./dep.js";
+import { Uint16, Constrained } from "./dep.ts";
 
 
 /**
