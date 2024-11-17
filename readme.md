@@ -120,6 +120,7 @@ if (response.status === HttpStatus.OK.value) {
 Contributions to improve the library are welcome. Please open an issue or pull request on the GitHub repository.
 
 ### Donation
+
 - https://paypal.me/aiconeid 
 
 ## License

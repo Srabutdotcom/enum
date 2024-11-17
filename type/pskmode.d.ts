@@ -1,23 +1,27 @@
-/**
- * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
- */
-export class PskKeyExchangeMode extends Enum {
-    /**psk_ke:  PSK-only key establishment.  In this mode, the server
-       MUST NOT supply a "key_share" value. */
-    static PSK_KE: PskKeyExchangeMode;
-    /**psk_dhe_ke:  PSK with (EC)DHE key establishment.  In this mode, the
-       client and server MUST supply "key_share" values as described in
-       Section 4.2.8. */
-    static PSK_DHE_KE: PskKeyExchangeMode;
-    /**
-     * check octet and return valid PskKeyExchangeMode
-     *
-     * @static
-     * @param {Uint8Array} octet
-     * @returns {PskKeyExchangeMode }
-     */
-    static from(octet: Uint8Array): PskKeyExchangeMode;
-    /**return 8 */
-    get bit(): number;
-}
 import { Enum } from "../src/enum.js";
+
+/**
+ * Represents the PskKeyExchangeMode, as defined in RFC 8446, Section 4.4.2.
+ * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
+ */
+export declare class PskKeyExchangeMode extends Enum {
+   /** PSK-only key establishment. The server MUST NOT supply a "key_share" value. */
+   static PSK_KE: PskKeyExchangeMode;
+
+   /** PSK with (EC)DHE key establishment. Both the client and server MUST supply "key_share" values. */
+   static PSK_DHE_KE: PskKeyExchangeMode;
+
+   /**
+    * Creates a PskKeyExchangeMode instance from an octet.
+    * @param octet - The octet value (Uint8Array) to parse.
+    * @returns {PskKeyExchangeMode} - The corresponding PskKeyExchangeMode instance.
+    * @throws {Error} - If the octet is not a valid PskKeyExchangeMode type.
+    */
+   static from(octet: Uint8Array): PskKeyExchangeMode;
+
+   /** Returns the bit value for the mode (8). */
+   readonly bit: number;
+
+   /** Returns the Uint8Array representation of the mode. */
+   readonly Uint8: Uint8Array;
+}
