@@ -123,49 +123,4 @@ export class ProtocolVersion extends Uint16 {
    }
 }
 
-/**
- * Represents the selected protocol version.
- * @type {ProtocolVersion}
- */
-export var Selected_version = Version.TLS13.protocolVersion()
-
-export class Versions extends Constrained {
-   versions
-
-   static fromVersions(...versions) {  // renamed from 'of' to 'fromVersions'
-      return new Versions(...versions)
-   }
-
-   static default(){
-      return new Versions(Version.TLS12, Version.TLS13);
-   }
-
-   constructor(...versions) {
-      super(2, 254, ...versions.map(e => e.protocolVersion()))
-      this.versions = versions
-   }
-
-   static from(array) {
-      if (array.length < 3) {
-         throw new Error('Invalid array length')
-      }
-
-      const arrayCopy = new Uint8Array(array)
-      const length = arrayCopy[0]
-
-      // Validate length against array size
-      if (length + 1 > arrayCopy.length) {
-         throw new Error('Invalid versions length')
-      }
-
-      const versions = []
-      for (let i = 1; i < length + 1; i += 2) {
-         versions.push(Version.from(arrayCopy.subarray(i, i + 2)))
-      }
-
-      return Versions.fromVersions(...versions)
-   }
-}
-
-
 // npx -p typescript tsc ./src/version.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

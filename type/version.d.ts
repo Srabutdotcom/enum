@@ -92,40 +92,5 @@ export class ProtocolVersion extends Uint16 {
      */
     static from(array: Uint8Array): ProtocolVersion;
 }
-/**
- * Represents the selected protocol version.
- * @type {ProtocolVersion}
- */
-export var Selected_version: ProtocolVersion;
-/**
- * Class representing a collection of protocol versions.
- * Extends Constrained to enforce limits on the number of versions.
- */
-export class Versions extends Constrained {
-    /**
-     * Creates a new Versions instance from provided versions.
-     *
-     * @static
-     * @param {...Version} versions - The versions to include in the collection.
-     * @returns {Versions} A new Versions instance.
-     */
-    static fromVersions(...versions: Version[]): Versions;
-    /**
-     * Creates a default Versions instance with TLS 1.2 and TLS 1.3.
-     *
-     * @static
-     * @returns {Versions} A new Versions instance with default versions.
-     */
-    static default(): Versions;
-    constructor(...versions: Version[]);
-    /**
-     * Parses a Uint8Array and creates a Versions instance.
-     *
-     * @static
-     * @param {Uint8Array} array - A byte array representing protocol versions.
-     * @returns {Versions} A new Versions instance based on the parsed array.
-     * @throws {Error} If the array does not represent valid versions.
-     */
-    static from(array: Uint8Array): Versions;
-}
+
 import { Enum } from "../type/enum.d.ts";
