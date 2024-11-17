@@ -47,38 +47,5 @@ export class SignatureScheme extends Enum {
      * 
      * @returns {Uint16} The Uint16 representation of the SignatureScheme.
      */
-    toUint16(): Uint16;
-}
-
-/**
- * Represents a list of supported signature schemes.
- */
-export class SignatureSchemeList extends Constrained {
-    supported_signature_algorithms: SignatureScheme[];
-
-    /**
-     * Creates a SignatureSchemeList instance from the provided signature schemes.
-     * 
-     * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
-     */
-    constructor(...signatureScheme: SignatureScheme[]);
-
-    /**
-     * Creates a SignatureSchemeList from the provided signature schemes.
-     * 
-     * @static
-     * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
-     * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
-     */
-    static fromSchemes(...signatureScheme: SignatureScheme[]): SignatureSchemeList;
-
-    /**
-     * Creates a SignatureSchemeList from a Uint8Array.
-     * 
-     * @static
-     * @param {Uint8Array} array - The array to parse into a SignatureSchemeList.
-     * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
-     * @throws {Error} If the length of the array is invalid.
-     */
-    static from(array: Uint8Array): SignatureSchemeList;
+    get Uint16(): Uint16;
 }

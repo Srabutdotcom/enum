@@ -1,4 +1,4 @@
-import { SignatureScheme, SignatureSchemeList } from "../src/signaturescheme.js";
+import { SignatureScheme } from "../src/signaturescheme.js";
 import { assertEquals } from "jsr:@std/assert";
 
 console.log(SignatureScheme.ED448);
@@ -11,17 +11,8 @@ for (const e of codes) {
 
 Deno.test("SignatureAlgorithmSchema", () => {
    // Example usage
-   const test = SignatureSchemeList.fromSchemes(
-      SignatureScheme.ECDSA_SECP256R1_SHA256,
-      SignatureScheme.ECDSA_SECP384R1_SHA384,
-      SignatureScheme.ECDSA_SECP521R1_SHA512,
-      SignatureScheme.RSA_PSS_PSS_SHA256,
-      SignatureScheme.RSA_PSS_PSS_SHA384,
-      SignatureScheme.RSA_PSS_PSS_SHA512,
-      SignatureScheme.ED25519,
-      SignatureScheme.ED448
-   );
-   const back = SignatureSchemeList.from(test);
+   const test = SignatureScheme.ED448.Uint16
+   const back = SignatureScheme.from(test).Uint16;
    assertEquals(test, back)
 })
 

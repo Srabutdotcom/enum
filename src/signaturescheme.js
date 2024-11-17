@@ -67,60 +67,7 @@ export class SignatureScheme extends Enum {
     * 
     * @returns {Uint16} The Uint16 representation of the SignatureScheme.
     */
-   toUint16() { return Uint16.fromValue(+this); }
+   get Uint16() { return Uint16.fromValue(+this); }
 }
-
-/**
- * Represents a list of supported signature schemes.
- */
-export class SignatureSchemeList extends Constrained {
-   supported_signature_algorithms;
-
-   /**
-    * Creates a SignatureSchemeList instance from the provided signature schemes.
-    * 
-    * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
-    */
-   constructor(...signatureScheme) {
-      super(2, 65534, ...signatureScheme.map(e => e.toUint16()));
-      this.supported_signature_algorithms = signatureScheme;
-   }
-
-   /**
-    * Creates a SignatureSchemeList from the provided signature schemes.
-    * 
-    * @static
-    * @param {...SignatureScheme} signatureScheme - The signature schemes to include in the list.
-    * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
-    */
-   static fromSchemes(...signatureScheme) {
-      return new SignatureSchemeList(...signatureScheme);
-   }
-
-   /**
-    * Creates a SignatureSchemeList from a Uint8Array.
-    * 
-    * @static
-    * @param {Uint8Array} array - The array to parse into a SignatureSchemeList.
-    * @returns {SignatureSchemeList} A new instance of SignatureSchemeList.
-    * @throws {Error} If the length of the array is invalid.
-    */
-   static from(array) {
-      const arrayCopy = new Uint8Array(array);
-      const length = Uint16.from(arrayCopy.subarray(0, 2)).value;
-      // Validate length against array size
-      if (length + 2 > arrayCopy.length) {
-         throw new Error('Invalid SignatureSchemeList length');
-      }
-      
-      const signatureSchemes = [];
-      for (let i = 2; i < length + 2; i += 2) {
-         signatureSchemes.push(SignatureScheme.from(arrayCopy.subarray(i, i + 2)));
-      }
-      return SignatureSchemeList.fromSchemes(...signatureSchemes);
-   }
-}
-
-
 
 // npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
