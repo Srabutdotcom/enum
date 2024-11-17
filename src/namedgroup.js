@@ -165,7 +165,7 @@ export class NamedGroupList extends Constrained {
     * @param {...NamedGroup} namedgroup - The NamedGroup instances to include in the list.
     */
    constructor(...namedgroup) {
-      const namedgroupUint16 = namedgroup.map(e => e.toUint16());
+      const namedgroupUint16 = namedgroup.map(e => e.Uint16);
       super(2, 65535, ...namedgroupUint16);
       this.namedGroups = namedgroup;
    }
@@ -235,7 +235,7 @@ export class KeyShareEntry extends Struct {
     * @param {KeyExchange} key_exchange - The KeyExchange associated with the key share.
     */
    constructor(group, key_exchange) {
-      super(group.toUint16(), key_exchange);
+      super(group.Uint16, key_exchange);
       this.group = group;
       this.key_exchange = key_exchange.key_exchange;
    }
