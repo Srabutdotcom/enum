@@ -112,67 +112,16 @@ export class Handshake extends Struct {
       return new Handshake(msg_type, Uint24.fromValue(message.length), message)
    }
    static from(array){
-      const msg_type = HandshakeType.fromValue(array[0]);
-      const length = Uint24.from(array.subarray(1,3));
-      const message = array.subarray(3, 3 + length.value)
+      const copy = Uint8Array.from(array)
+      const msg_type = HandshakeType.fromValue(copy[0]);
+      const length = Uint24.from(copy.subarray(1,3));
+      const message = copy.subarray(3, 3 + length.value)
       return new Handshake(msg_type, length, message)
    }
    constructor(msg_type, length, message){
       super(+msg_type, length, message)
       this.msg_type = msg_type;
       this.message = message
-   }
-}
-
-export class ClientHello extends Struct {
-   legacy_version;
-   random;
-   legacy_session;
-   cipher_suites;
-   legacy_compression_methods;
-   extensions;
-   constructor(
-      legacy_version, 
-      random, 
-      legacy_session,
-      cipher_suites, 
-      legacy_compression_methods, 
-      extensions
-   ){
-      super(
-         legacy_version, 
-         random, 
-         legacy_session,
-         cipher_suites, 
-         legacy_compression_methods, 
-         extensions
-      )
-   }
-}
-
-export class ServerHello extends Struct {
-   legacy_version;
-   random;
-   legacy_session_id_echo;
-   cipher_suite;
-   legacy_compression_method ; // Uint8 = 0
-   extensions;
-   constructor(
-      legacy_version, 
-      random, 
-      legacy_session_id_echo,
-      cipher_suite, 
-      legacy_compression_method, 
-      extensions
-   ){
-      super(
-         legacy_version, 
-         random, 
-         legacy_session_id_echo,
-         cipher_suite, 
-         legacy_compression_method, 
-         extensions
-      )
    }
 }
 
