@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/namedgroup.d.ts"
 
-import { /* p256, p384, p521, x25519, x448,  */ Uint16, KeyExchange, KeyShareEntry } from "./dep.ts";
+import { p256, p384, p521, x25519, x448, Uint16, KeyExchange, KeyShareEntry } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
@@ -53,25 +53,7 @@ export class NamedGroup extends Enum {
     */
    constructor(name, value) {
       super(name, value);
-      /* switch (this.name) {
-         case "SECP256R1": {
-            this.#keyGen = p256; break;
-         }
-         case "SECP384R1": {
-            this.#keyGen = p384; break;
-         }
-         case "SECP521R1": {
-            this.#keyGen = p521; break;
-         }
-         case "X25519": {
-            this.#keyGen = x25519; break;
-         }
-         case "X448": {
-            this.#keyGen = x448; break;
-         }
-      } */
-      this.#privateKey = this.#keyGen?.utils.randomPrivateKey();
-      this.#publicKey = this.#keyGen?.getPublicKey(this.#privateKey);
+
    }
 
    /**
@@ -86,21 +68,38 @@ export class NamedGroup extends Enum {
     * 
     * @returns {Function} The key generation function.
     */
-   get keyGen() { return this.#keyGen; }
+   get keyGen() {
+      switch (this.name) {
+         case "SECP256R1": return p256;
+         case "SECP384R1": return p384;
+         case "SECP521R1": return p521;
+         case "X25519": return x25519;
+         case "X448": return x448;
+         default: return x25519;
+      }
+   }
 
    /**
     * Gets the private key associated with the NamedGroup.
     * 
     * @returns {Uint8Array} The private key.
     */
-   get privateKey() { return this.#privateKey; }
+   get privateKey() {
+      if (this.#privateKey) return this.#privateKey;
+      this.#privateKey = this.keyGen?.utils.randomPrivateKey();
+      return this.#privateKey
+   }
 
    /**
     * Gets the public key associated with the NamedGroup.
     * 
     * @returns {Uint8Array} The public key.
     */
-   get publicKey() { return this.#publicKey; }
+   get publicKey() { 
+      if(this.#publicKey)return this.#publicKey;
+      this.#publicKey = this.keyGen?.getPublicKey(this.privateKey);
+      return this.#publicKey;
+    }
 
    /**
     * Computes the shared key with a peer's public key.
@@ -109,7 +108,7 @@ export class NamedGroup extends Enum {
     * @returns {Uint8Array} The shared secret.
     */
    getSharedKey(peerPublicKey) {
-      return this.#keyGen?.getSharedSecret(this.#privateKey, peerPublicKey);
+      return this.keyGen?.getSharedSecret(this.#privateKey, peerPublicKey);
    }
 
    /**
