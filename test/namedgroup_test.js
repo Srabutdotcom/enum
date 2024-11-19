@@ -19,4 +19,4 @@ Deno.test(
    }
 )
 
-
+const x25519 = NamedGroup.X25519.keyShareEntry(); debugger;
