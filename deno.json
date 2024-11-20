@@ -1,6 +1,6 @@
 {
   "name": "@tls/enum",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "exports": "./src/mod.ts",
   "publish": {
     "exclude": ["dist/"]
@@ -17,6 +17,6 @@
     "@noble/curves": "npm:@noble/curves@^1.6.0",
     "@std/assert": "jsr:@std/assert@^1.0.2",
     "@tls/extension": "jsr:@tls/extension@^0.1.2",
-    "@tls/struct": "jsr:@tls/struct@^0.2.2"
+    "@tls/struct": "jsr:@tls/struct@^0.2.6"
   }
 }
