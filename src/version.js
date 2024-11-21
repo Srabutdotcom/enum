@@ -83,7 +83,7 @@ export class Version extends Enum {
  * Represents a Protocol Version as a 16-bit unsigned integer.
  * Extends Uint16 to handle 2-byte representations of protocol versions.
  */
-export class ProtocolVersion extends Uint16 {
+export class ProtocolVersion extends Uint8Array {
    /**
     * The `Version` instance associated with this `ProtocolVersion`.
     * @type {Version}
@@ -95,7 +95,7 @@ export class ProtocolVersion extends Uint16 {
     * @param {Version|number} version - A `Version` instance or a version number (as a 16-bit integer).
     */
    constructor(version){
-      const uint16 = ProtocolVersion.fromValue(+version);
+      const uint16 = Uint16.fromValue(+version);
       super(uint16);
       this.version = version
    }

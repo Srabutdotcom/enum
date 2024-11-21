@@ -61,3 +61,4 @@ Deno.test("ProtocolVersion Class - Constructor", () => {
   assertEquals(protocolVersion.version, Version.TLS13, "Expected ProtocolVersion to match Version.TLS13");
 });
 
+const protocolVersion = ProtocolVersion.fromVersion(Version.TLS12);
