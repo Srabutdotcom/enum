@@ -116,7 +116,7 @@ export class Handshake extends Struct {
       const msg_type = HandshakeType.fromValue(copy[0]);
       const lengthOf = Uint24.from(copy.subarray(1)).value;
       const message = copy.subarray(4, 4 + lengthOf)
-      return new Handshake(msg_type, length, message)
+      return new Handshake(msg_type, lengthOf, message)
    }
    constructor(msg_type, length, message){
       super(+msg_type, length, message)
