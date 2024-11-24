@@ -33,7 +33,7 @@ export class SignatureScheme extends Enum {
    static RSA_PSS_PSS_SHA384 = new SignatureScheme('RSA_PSS_PSS_SHA384', 0x080a);
    static RSA_PSS_PSS_SHA512 = new SignatureScheme('RSA_PSS_PSS_SHA512', 0x080b);
 
-   /* Legacy algorithms 
+   /* Legacy algorithms */
    static RSA_PKCS1_SHA1 = new SignatureScheme('RSA_PKCS1_SHA1', 0x0201);
    static ECDSA_SHA1 = new SignatureScheme('ECDSA_SHA1', 0x0203);
  
