@@ -37,7 +37,12 @@ export class SignatureScheme extends Enum {
    static RSA_PKCS1_SHA1 = new SignatureScheme('RSA_PKCS1_SHA1', 0x0201);
    static ECDSA_SHA1 = new SignatureScheme('ECDSA_SHA1', 0x0203);
  
-   /* Reserved Code Points 
+   /* Reserved Code Points */ 
+   static dsa_sha1_RESERVED = new SignatureScheme('dsa_sha1_RESERVED', 0x0202);
+   static dsa_sha256_RESERVED = new SignatureScheme('dsa_sha256_RESERVED', 0x0402);
+   static dsa_sha384_RESERVED = new SignatureScheme('dsa_sha384_RESERVED', 0x0502);
+   static dsa_sha512_RESERVED = new SignatureScheme('dsa_sha512_RESERVED', 0x0602)
+   /*
    static PRIVATE_USE_START = new SignatureScheme('PRIVATE_USE_START', 0xFE00);
    static PRIVATE_USE_END = new SignatureScheme('PRIVATE_USE_END', 0xFFFF);
    static PRIVATE_USE = new SignatureScheme('PRIVATE_USE', 0xFFFF);
