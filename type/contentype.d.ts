@@ -21,5 +21,9 @@ export class ContentType extends Enum {
     static from(octet: Uint8Array): ContentType;
     /**return 8 */
     get bit(): number;
+
+    /**return Uint8  */
+    get Uint8(): Uint8
 }
+import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
