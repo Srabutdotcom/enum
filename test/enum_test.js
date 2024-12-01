@@ -1,5 +1,6 @@
 import { Enum } from "../src/enum.js";
 import { assertEquals } from "jsr:@std/assert";
+
 /**
 * @class Color
 * @extends Enum
@@ -65,3 +66,4 @@ Deno.test(
         assertEquals(Color.GREEN.name, "GREEN")
     }
 )
+

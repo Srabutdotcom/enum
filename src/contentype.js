@@ -1,9 +1,9 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/contentype.d.ts"
 
-import { Uint8 } from "./dep.ts";
+import { Uint8, TLSPlaintext } from "./dep.ts";
 import { Enum } from "./enum.js";
-
+import { Version } from "./version.js";
 
 /**
  * The higher-level protocol used to process the enclosed
@@ -35,6 +35,14 @@ export class ContentType extends Enum {
 
    /**return 8 */
    get bit() { return 8 }
+
+   tlsPlainText(fragment){
+      return TLSPlaintext.createFrom(
+         this,
+         Version.TLS13,
+         fragment
+      )
+   }
 }
 
 //npx -p typescript tsc ./src/contentype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

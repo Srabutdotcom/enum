@@ -103,13 +103,15 @@ export class HandshakeType extends Enum {
    handshake(message){
       return Handshake.fromMessage(this, message)
    }
+
+   get Uint8(){ return Uint8.fromValue(+this)}
 }
 
-export class Handshake extends Struct {
+export class Handshake extends Uint8Array {
    msg_type
    message
    static fromMessage(msg_type, message){
-      return new Handshake(msg_type, Uint24.fromValue(message.length), message)
+      return new Handshake(msg_type, message)
    }
    static from(array){
       const copy = Uint8Array.from(array)
@@ -118,10 +120,12 @@ export class Handshake extends Struct {
       const message = copy.subarray(4, 4 + lengthOf)
       return new Handshake(msg_type, lengthOf, message)
    }
-   constructor(msg_type, length, message){
-      super(+msg_type, length, message)
+   constructor(msg_type, message){
+      const struct = new Struct(msg_type.Uint8,  Uint24.fromValue(message.length), message)
+      super(struct)
       this.msg_type = msg_type;
       this.message = message
+      this.items = struct.items
    }
 }
 
