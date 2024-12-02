@@ -2,7 +2,7 @@
 // @ts-self-types="../type/certificatetype.d.ts"
 
 import { Enum } from "./enum.js";
-import { Constrained, Struct, Uint24, Uint8, Uint16 } from "./dep.ts"
+import { Constrained, Struct, Uint24, Uint8, Uint16, Extension } from "./dep.ts"
 
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
@@ -77,8 +77,14 @@ class Cert_data extends Constrained {
 class Extensions extends Constrained {
    static from(array){
       const copy = Uint8Array.from(array);
-      const lengthOf = Uint16.from(copy).value;
-      return new Extensions(copy.subarray(2, lengthOf + 2))
+      const _lengthOf = Uint16.from(copy).value;
+      let offset = 2;
+      const extensions = [];
+      while(offset< copy.length){
+         const extension = Extension.from(copy.subarray(offset));offset+=extension.length;
+         extensions.push(extension);
+      }
+      return new Extensions(...extensions)
    }
    constructor(...extension){
       super(0, 2**16-1, ...extension);
@@ -101,9 +107,14 @@ class Certificate_request_context extends Constrained {
 class Certificate_list extends Constrained {
    static from(array){
       const copy = Uint8Array.from(array);
-      const lengthOf = Uint24.from(copy).value;
-      const certificateEntry = CertificateEntry.from(copy.subarray(3, lengthOf + 3)); 
-      return new Certificate_list(certificateEntry)
+      const _lengthOf = Uint24.from(copy).value;
+      let offset = 3;
+      const certificateEntries = []
+      while(offset<copy.length){
+         const certificateEntry = CertificateEntry.from(copy.subarray(offset)); offset+=certificateEntry.length;
+         certificateEntries.push(certificateEntry)
+      }
+      return new Certificate_list(...certificateEntries)
    }
    constructor(...certificateEntry){
       super(0, 2**24-1, ...certificateEntry);
