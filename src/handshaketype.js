@@ -118,7 +118,7 @@ export class Handshake extends Uint8Array {
       const msg_type = HandshakeType.fromValue(copy[0]);
       const lengthOf = Uint24.from(copy.subarray(1)).value;
       const message = copy.subarray(4, 4 + lengthOf)
-      return new Handshake(msg_type, lengthOf, message)
+      return new Handshake(msg_type, message)
    }
    constructor(msg_type, message){
       const struct = new Struct(msg_type.Uint8,  Uint24.fromValue(message.length), message)
