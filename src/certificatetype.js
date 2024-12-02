@@ -102,7 +102,8 @@ class Certificate_list extends Constrained {
    static from(array){
       const copy = Uint8Array.from(array);
       const lengthOf = Uint24.from(copy).value;
-      return new Certificate_list(copy.subarray(3, lengthOf + 3))
+      const certificateEntry = CertificateEntry.from(copy.subarray(3, lengthOf + 3)); 
+      return new Certificate_list(certificateEntry)
    }
    constructor(...certificateEntry){
       super(0, 2**24-1, ...certificateEntry);
