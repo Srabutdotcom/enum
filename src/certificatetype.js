@@ -3,6 +3,7 @@
 
 import { Enum } from "./enum.js";
 import { Constrained, Struct, Uint24, Uint8, Uint16, Extension } from "./dep.ts"
+import { x509 } from "./dep.ts";
 
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
@@ -41,6 +42,7 @@ export class CertificateEntry extends Uint8Array {
       super(struct);
       this.opaque = opaque;
       this.extension = extension
+      this.x509 = new x509.X509Certificate(btoa(String.fromCharCode(...opaque)))
    }
 }
 

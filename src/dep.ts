@@ -9,4 +9,5 @@ export { x448 } from '@noble/curves/ed448'
 export * as utils from "@noble/curves/abstract/utils"
 export { TLSPlaintext } from "@tls/record"
 export { HexaDecimal } from "@tls/struct"
+export * as x509 from "@peculiar/x509"
 
