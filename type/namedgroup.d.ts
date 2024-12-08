@@ -1,5 +1,5 @@
 import { Enum } from "./enum.d.ts";
-import { Uint16, KeyShareEntry } from "../src/dep.ts";
+import { Uint16, Constrained, Struct } from "../src/dep.ts";
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
  */
@@ -83,3 +83,55 @@ export class NamedGroup extends Enum {
     keyShareEntry(): KeyShareEntry;
 }
 
+/**
+ * Represents a key exchange mechanism.
+ */
+export class KeyExchange extends Constrained {
+    /**
+     * Creates a KeyExchange from an octet array.
+     * @param {Uint8Array} octet - The octet array.
+     * @returns {KeyExchange} A KeyExchange instance.
+     */
+    static fromKey(octet: Uint8Array): KeyExchange;
+
+    /**
+     * Creates a KeyExchange from a Uint8Array.
+     * @param {Uint8Array} array - The input byte array.
+     * @returns {KeyExchange} A KeyExchange instance.
+     */
+    static from(array: Uint8Array): KeyExchange;
+
+    /**
+     * Constructs a KeyExchange instance.
+     * @param {Uint8Array} octet - The octet array representing the key exchange.
+     */
+    constructor(octet: Uint8Array);
+
+    /** The key exchange octet. */
+    key_exchange: Uint8Array;
+}
+
+/**
+ * Represents a key share entry in TLS handshake.
+ */
+export class KeyShareEntry extends Struct {
+    /**
+     * Creates a KeyShareEntry from a Uint8Array.
+     * @param {Uint8Array} array - The input byte array.
+     * @returns {KeyShareEntry} A KeyShareEntry instance.
+     */
+    static from(array: Uint8Array): KeyShareEntry;
+
+    /**
+     * Constructs a KeyShareEntry instance.
+     * @param {NamedGroup} group - The NamedGroup for the key share.
+     * @param {KeyExchange} key_exchange - The KeyExchange for the key share.
+     */
+    constructor(group: NamedGroup, key_exchange: KeyExchange);
+
+    /** The NamedGroup for the key share. */
+    group: NamedGroup;
+
+    /** The key exchange octet. */
+    key_exchange: Uint8Array;
+}

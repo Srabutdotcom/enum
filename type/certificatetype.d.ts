@@ -1,5 +1,5 @@
 import { Enum } from "../src/enum.js";
-import { Constrained } from "../src/dep.ts";
+import { Constrained, x509 } from "../src/dep.ts";
 
 /**
  * Represents TLS Certificate Types.
@@ -35,24 +35,35 @@ export class CertificateType extends Enum {
  */
 export class CertificateEntry extends Uint8Array {
   /**
-   * Parses an array to create a `CertificateEntry`.
-   * @param {Uint8Array} array - The array to parse.
-   * @returns {CertificateEntry} The parsed certificate entry.
+   * The opaque certificate data.
+   */
+  readonly opaque: Uint8Array;
+
+  /**
+   * The extensions associated with the certificate.
+   */
+  readonly extension: any[];
+
+  /**
+   * Parsed X.509 certificate.
+   */
+  readonly x509: x509.X509Certificate;
+
+  /**
+   * Creates a `CertificateEntry` instance from an array-like object.
+   *
+   * @param {Uint8Array} array - The source array-like object to create the certificate entry from.
+   * @returns {CertificateEntry} - A new `CertificateEntry` instance.
    */
   static from(array: Uint8Array): CertificateEntry;
 
   /**
-   * Constructs a `CertificateEntry`.
-   * @param {Uint8Array} opaque - The certificate data.
-   * @param {...Uint8Array} extension - The certificate extensions.
+   * Constructs a `CertificateEntry` instance.
+   *
+   * @param {Uint8Array} opaque - The opaque certificate data.
+   * @param {...Uint8Array} extension - The extensions associated with the certificate.
    */
   constructor(opaque: Uint8Array, ...extension: Uint8Array[]);
-
-  /** The certificate data. */
-  opaque: Uint8Array;
-
-  /** The certificate extensions. */
-  extension: Uint8Array[];
 }
 
 /**

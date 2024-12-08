@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/namedgroup.d.ts"
 
-import { p256, p384, p521, x25519, x448, Uint16, KeyExchange, KeyShareEntry } from "./dep.ts";
+import { p256, p384, p521, x25519, x448, Uint16, Constrained, Struct } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
@@ -122,7 +122,44 @@ export class NamedGroup extends Enum {
    }
 }
 
+/**
+ * Represents a key exchange mechanism.
+ */
+export class KeyExchange extends Constrained {
 
+   static fromKey(octet) { return new KeyExchange(octet); }
+
+   static from(array) {
+      const copy = Uint8Array.from(array);
+      const lengthOf = Uint16.from(copy.subarray(0, 2)).value;
+      const octet = copy.subarray(2, 2 + lengthOf);
+      return new KeyExchange(octet);
+   }
+
+   constructor(octet) {
+      super(1, 65535, octet);
+      this.key_exchange = octet;
+   }
+}
+
+/**
+ * Represents a key share entry.
+ */
+export class KeyShareEntry extends Struct {
+   
+   static from(array) {
+      const copy = Uint8Array.from(array);
+      const group = NamedGroup.from(copy.subarray(0, 2));
+      const key_exchange = KeyExchange.from(copy.subarray(2));
+      return new KeyShareEntry(group, key_exchange);
+   }
+
+   constructor(group, key_exchange) {
+      super(group.Uint16, key_exchange);
+      this.group = group;
+      this.key_exchange = key_exchange.key_exchange;
+   }
+}
 
 
 

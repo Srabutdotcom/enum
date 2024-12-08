@@ -2,8 +2,9 @@
 // @ts-self-types="../type/certificatetype.d.ts"
 
 import { Enum } from "./enum.js";
-import { Constrained, Struct, Uint24, Uint8, Uint16, Extension } from "./dep.ts"
+import { Constrained, Struct, Uint24, Uint8, Uint16 } from "./dep.ts"
 import { x509 } from "./dep.ts";
+import { Extension } from "./extensiontype.js"
 
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
