@@ -4,6 +4,8 @@
 import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 import { sha256 } from "@noble/hashes/sha256"
+import { hkdfExpandLabel } from "./dep.ts"
+import { HandshakeType } from "./handshaketype.js";
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
@@ -79,6 +81,10 @@ export class SignatureScheme extends Enum {
       const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey)
       return new CertificateVerify(this, signature)
    }
+   async certificateVerifyMsg(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey){
+      const certificateVerify = await this.certificateVerify(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey);
+      return HandshakeType.CERTIFICATE_VERIFY.handshake(certificateVerify);
+   }
 }
 
 export class CertificateVerify extends Uint8Array {
@@ -101,44 +107,44 @@ export class CertificateVerify extends Uint8Array {
 }
 
 export class Signature extends Constrained {
-   static from(array){
+   static from(array) {
       const copy = Uint8Array.from(array);
       const lengthOf = Uint16.from(copy).value;
       return new Signature(copy.subarray(2, 2 + lengthOf))
    }
-   constructor(opaque){
-      super(0,2**16-1, opaque)
+   constructor(opaque) {
+      super(0, 2 ** 16 - 1, opaque)
       this.opaque = opaque
    }
 }
 
 async function signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey) {
    const leading = Uint8Array.of(
-         //NOTE 64 space characters 
-         32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-         //NOTE 'TLS 1.3, server CertificateVerify'
-         84, 76, 83, 32, 49, 46, 51, 44, 32, 115, 101, 114, 118, 101, 114, 32, 67, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 86, 101, 114, 105, 102, 121,
-         //NOTE single null char
-         0
+      //NOTE 64 space characters 
+      32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+      //NOTE 'TLS 1.3, server CertificateVerify'
+      84, 76, 83, 32, 49, 46, 51, 44, 32, 115, 101, 114, 118, 101, 114, 32, 67, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 86, 101, 114, 105, 102, 121,
+      //NOTE single null char
+      0
    )
    const transcriptHash = sha256.create()
-         .update(clientHelloMsg)
-         .update(serverHelloMsg)
-         .update(certificateMsg)
-         .digest();
+      .update(clientHelloMsg)
+      .update(serverHelloMsg)
+      .update(certificateMsg)
+      .digest();
 
    const data = Struct.createFrom(
-         leading,
-         transcriptHash
+      leading,
+      transcriptHash
    )
 
    const signBuffer = await crypto.subtle.sign(
-         {
-               name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-               saltLength: 256 / 8
-         },
-         RSAprivateKey,
-         data
+      {
+         name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+         saltLength: 256 / 8
+      },
+      RSAprivateKey,
+      data
    )
 
    /* const verify = await crypto.subtle.verify(
@@ -150,8 +156,49 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSA
          sign,
          data
    ) */
+   const signature = new Uint8Array(signBuffer)
+   signature.transcriptHash = transcriptHash;
+   return signature
+}
 
-   return new Uint8Array(signBuffer) 
+export async function finished(serverHS_secret, certificateVerifyMsg) {
+   const finishedKey = hkdfExpandLabel(serverHS_secret, 'finished', new Uint8Array, 32);
+   const finishedKeyCrypto = await crypto.subtle.importKey(
+      "raw",
+      finishedKey,
+      {
+         name: "HMAC",
+         hash: { name: "SHA-256" },
+      },
+      true,
+      ["sign", "verify"]
+   );
+   const transcriptHash = sha256.create()
+      .update(certificateVerifyMsg.message.signature.transcriptHash)
+      .update(certificateVerifyMsg.byte)
+      .digest();
+
+   const verify_data = await crypto.subtle.sign(
+      { name: "HMAC" },
+      finishedKeyCrypto,
+      transcriptHash
+   )
+
+   /* const _test_verify_data = await crypto.subtle.verify(
+      { name: "HMAC" },
+      finishedKeyCrypto,
+      verify_data,
+      transcriptHash
+   ) */
+   verify_data.transcriptHash = transcriptHash;
+   return new Finished(verify_data);
+}
+
+export class Finished extends Uint8Array {
+   constructor(verify_data){
+      super(verify_data);
+      this.verify_data = verify_data 
+   }
 }
 
 // npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

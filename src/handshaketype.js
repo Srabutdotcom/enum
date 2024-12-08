@@ -127,6 +127,7 @@ export class Handshake extends Uint8Array {
       this.message = message
       this.items = struct.items
    }
+   get byte(){ return Uint8Array.from(this)}
 }
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

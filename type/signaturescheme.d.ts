@@ -136,3 +136,32 @@ export function signatureFrom(
   certificateMsg: Uint8Array,
   RSAprivateKey: CryptoKey
 ): Promise<Uint8Array>;
+
+/**
+ * Verifies and generates the HMAC for the given data.
+ *
+ * @param {Uint8Array} serverHS_secret - The server handshake secret used for key derivation.
+ * @param {object} certificateVerifyMsg - The certificate verify message object.
+ * @param {Uint8Array} certificateVerifyMsg.message.transcriptHash - The transcript hash from the message.
+ * @returns {Promise<Uint8Array>} A promise that resolves to the verify_data HMAC value as a Uint8Array.
+ */
+export declare function finished(
+  serverHS_secret: Uint8Array,
+  certificateVerifyMsg: {
+    message: {
+      transcriptHash: Uint8Array;
+    };
+  }
+): Promise<Uint8Array>;
+
+/**
+ * Represents the Finished message as a Uint8Array.
+ */
+export declare class Finished extends Uint8Array {
+  /**
+   * Creates a Finished message instance.
+   *
+   * @param {Uint8Array} verify_data - The verify_data HMAC value.
+   */
+  constructor(verify_data: Uint8Array);
+}

@@ -126,4 +126,6 @@ export declare class Handshake extends Uint8Array {
    * @param message - The handshake message payload.
    */
   constructor(msg_type: HandshakeType, message: Uint8Array);
+  /** return Uint8Array */
+  get byte(): Uint8Array
 }
