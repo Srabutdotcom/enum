@@ -1,8 +1,9 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/signaturescheme.d.ts"
 
-import { Uint16 } from "./dep.ts";
+import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
+import { sha256 } from "@noble/hashes/sha256"
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
@@ -36,8 +37,8 @@ export class SignatureScheme extends Enum {
    /* Legacy algorithms */
    static RSA_PKCS1_SHA1 = new SignatureScheme('RSA_PKCS1_SHA1', 0x0201);
    static ECDSA_SHA1 = new SignatureScheme('ECDSA_SHA1', 0x0203);
- 
-   /* Reserved Code Points */ 
+
+   /* Reserved Code Points */
    static dsa_sha1_RESERVED = new SignatureScheme('dsa_sha1_RESERVED', 0x0202);
    static dsa_sha256_RESERVED = new SignatureScheme('dsa_sha256_RESERVED', 0x0402);
    static dsa_sha384_RESERVED = new SignatureScheme('dsa_sha384_RESERVED', 0x0502);
@@ -73,6 +74,84 @@ export class SignatureScheme extends Enum {
     * @returns {Uint16} The Uint16 representation of the SignatureScheme.
     */
    get Uint16() { return Uint16.fromValue(+this); }
+
+   async certificateVerify(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey) {
+      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey)
+      return new CertificateVerify(this, signature)
+   }
+}
+
+export class CertificateVerify extends Uint8Array {
+   static from(array) {
+      const copy = Uint8Array.from(array)
+      const algorithm = SignatureScheme.from(copy);
+      const signature = Signature.from(copy.subarray(2))
+      return new CertificateVerify(algorithm, signature.opaque)
+   }
+   constructor(signatureScheme, signature) {
+      const signatureConstrained = new Signature(signature);
+      const struct = new Struct(
+         signatureScheme.Uint16,
+         signatureConstrained
+      )
+      super(struct);
+      this.algorithm = signatureScheme;
+      this.signature = signature
+   }
+}
+
+export class Signature extends Constrained {
+   static from(array){
+      const copy = Uint8Array.from(array);
+      const lengthOf = Uint16.from(copy).value;
+      return new Signature(copy.subarray(2, 2 + lengthOf))
+   }
+   constructor(opaque){
+      super(0,2**16-1, opaque)
+      this.opaque = opaque
+   }
+}
+
+async function signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey) {
+   const leading = Uint8Array.of(
+         //NOTE 64 space characters 
+         32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+         //NOTE 'TLS 1.3, server CertificateVerify'
+         84, 76, 83, 32, 49, 46, 51, 44, 32, 115, 101, 114, 118, 101, 114, 32, 67, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 86, 101, 114, 105, 102, 121,
+         //NOTE single null char
+         0
+   )
+   const transcriptHash = sha256.create()
+         .update(clientHelloMsg)
+         .update(serverHelloMsg)
+         .update(certificateMsg)
+         .digest();
+
+   const data = Struct.createFrom(
+         leading,
+         transcriptHash
+   )
+
+   const signBuffer = await crypto.subtle.sign(
+         {
+               name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+               saltLength: 256 / 8
+         },
+         RSAprivateKey,
+         data
+   )
+
+   /* const verify = await crypto.subtle.verify(
+         {
+            name: "RSA-PSS",//'RSASSA-PKCS1-v1_5',
+            saltLength: 256 / 8
+         },
+         RSAPublicKey, //rsapublickey in Certificate
+         sign,
+         data
+   ) */
+
+   return new Uint8Array(signBuffer) 
 }
 
 // npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

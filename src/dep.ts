@@ -7,4 +7,5 @@ export { x448 } from '@noble/curves/ed448'
 export * as utils from "@noble/curves/abstract/utils"
 export { HexaDecimal } from "@tls/struct"
 export * as x509 from "@peculiar/x509"
+export * from "@noble/hashes/sha2"
 
