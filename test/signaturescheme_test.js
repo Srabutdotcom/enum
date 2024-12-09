@@ -1,6 +1,7 @@
 import { SignatureScheme, CertificateVerify, finished, Finished } from "../src/signaturescheme.js";
 import { assertEquals } from "jsr:@std/assert";
 import { HexaDecimal, sha256 } from "../src/dep.ts";
+import { HandshakeType } from "../src/handshaketype.js"
 
 console.log(SignatureScheme.ED448);
 
@@ -35,6 +36,11 @@ const serverHelloMsg = HexaDecimal.fromString(
    69 28 00 13 01 00 00 2e 00 33 00 24 00 1d 00 20 c9 82 88 76 11
    20 95 fe 66 76 2b db f7 c6 72 e1 56 d6 cc 25 3b 83 3d f1 dd 69
    b1 b0 4e 75 1f 0f 00 2b 00 02 03 04`).byte
+
+const encryptedExtensionsMsg = HandshakeType.ENCRYPTED_EXTENSIONS.handshake(HexaDecimal.fromString(`00 22 00 0a 00 14 00
+      12 00 1d 00 17 00 18 00 19 01 00 01 01 01 02 01 03 01 04 00 1c
+      00 02 40 01 00 00 00 00
+`).byte).byte
 
 const certificateMsg = HexaDecimal.fromString(
    `0b 00 01 b9 00 00 01 b5 00 01 b0 30 82
@@ -72,18 +78,19 @@ const rsaKey = await crypto.subtle.generateKey(
 )
 
 Deno.test("CertificateVerify", async () => {
-   const test = await SignatureScheme.RSA_PSS_PSS_SHA256.certificateVerify(clientHelloMsg, serverHelloMsg, certificateMsg, rsaKey.privateKey)
+   const test = await SignatureScheme.RSA_PSS_PSS_SHA256.certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, rsaKey.privateKey)
    const back = CertificateVerify.from(test)
    assertEquals(test.toString(), back.toString())
 })
 
 
 Deno.test("Finished", async ()=>{
-   const test = await SignatureScheme.RSA_PSS_PSS_SHA256.certificateVerifyMsg(clientHelloMsg, serverHelloMsg, certificateMsg, rsaKey.privateKey)
+   const test = await SignatureScheme.RSA_PSS_PSS_SHA256.certificateVerifyMsg(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, rsaKey.privateKey)
    //const back = CertificateVerify.from(test)
    const serverHS_secret_fake = crypto.getRandomValues(new Uint8Array(32));
    const _finished = await finished(serverHS_secret_fake, test);
    const finishedBack = Finished.from(_finished);
    assertEquals(_finished.toString(), finishedBack.toString())
 })
+
 

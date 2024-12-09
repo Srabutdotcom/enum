@@ -77,12 +77,12 @@ export class SignatureScheme extends Enum {
     */
    get Uint16() { return Uint16.fromValue(+this); }
 
-   async certificateVerify(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey) {
-      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey)
+   async certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey) {
+      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey)
       return new CertificateVerify(this, signature)
    }
-   async certificateVerifyMsg(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey){
-      const certificateVerify = await this.certificateVerify(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey);
+   async certificateVerifyMsg(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey){
+      const certificateVerify = await this.certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey);
       return HandshakeType.CERTIFICATE_VERIFY.handshake(certificateVerify);
    }
 }
@@ -118,7 +118,7 @@ export class Signature extends Constrained {
    }
 }
 
-async function signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSAprivateKey) {
+async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey) {
    const leading = Uint8Array.of(
       //NOTE 64 space characters 
       32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
@@ -130,6 +130,7 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, certificateMsg, RSA
    const transcriptHash = sha256.create()
       .update(clientHelloMsg)
       .update(serverHelloMsg)
+      .update(encryptedExtensionsMsg)
       .update(certificateMsg)
       .digest();
 

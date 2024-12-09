@@ -1,5 +1,6 @@
 import { Constrained, Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
+import type { Handshake } from "../src/handshaketype.js";
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
@@ -64,6 +65,7 @@ export class SignatureScheme extends Enum {
    * Generates a CertificateVerify object.
    * @param {Uint8Array} clientHelloMsg - Client Hello message.
    * @param {Uint8Array} serverHelloMsg - Server Hello message.
+   * @param {Uint8Array} encryptedExtensionsMsg - encryptedExtensions message
    * @param {Uint8Array} certificateMsg - Certificate message.
    * @param {CryptoKey} RSAprivateKey - RSA private key.
    * @returns {Promise<CertificateVerify>} CertificateVerify object.
@@ -71,9 +73,27 @@ export class SignatureScheme extends Enum {
   certificateVerify(
     clientHelloMsg: Uint8Array,
     serverHelloMsg: Uint8Array,
+    encryptedExtensionsMsg: Uint8Array,
     certificateMsg: Uint8Array,
     RSAprivateKey: CryptoKey
   ): Promise<CertificateVerify>;
+  
+  /**
+   * Generates a CertificateVerify Handshake object.
+   * @param {Uint8Array} clientHelloMsg - Client Hello message.
+   * @param {Uint8Array} serverHelloMsg - Server Hello message.
+   * @param {Uint8Array} encryptedExtensionsMsg - encryptedExtensions message
+   * @param {Uint8Array} certificateMsg - Certificate message.
+   * @param {CryptoKey} RSAprivateKey - RSA private key.
+   * @returns {Promise<Handshake>} Handshake of CertificateVerify object.
+   */
+  certificateVerifyMsg(
+    clientHelloMsg: Uint8Array,
+    serverHelloMsg: Uint8Array,
+    encryptedExtensionsMsg: Uint8Array,
+    certificateMsg: Uint8Array,
+    RSAprivateKey: CryptoKey
+  ): Promise<Handshake>;
 }
 
 /**
@@ -133,6 +153,7 @@ export class Signature extends Constrained {
 export function signatureFrom(
   clientHelloMsg: Uint8Array,
   serverHelloMsg: Uint8Array,
+  encryptedExtensionsMsg: Uint8Array,
   certificateMsg: Uint8Array,
   RSAprivateKey: CryptoKey
 ): Promise<Uint8Array>;
