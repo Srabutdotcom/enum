@@ -115,3 +115,47 @@ export class TLSPlaintext extends Uint8Array {
    */
   readonly items: [Uint8Array, Uint8Array, Uint8Array];
 }
+
+/**
+ * Represents a TLSInnerPlaintext structure in the TLS 1.3 protocol.
+ * This class extends `Uint8Array` to encapsulate TLSInnerPlaintext data.
+ */
+export class TLSInnerPlaintext extends Uint8Array {
+  /**
+   * Creates a TLSInnerPlaintext instance from a given array.
+   *
+   * @param {Uint8Array } array - The input array to parse.
+   * @returns {TLSInnerPlaintext} A new instance of TLSInnerPlaintext.
+   */
+  static from(array: Uint8Array): TLSInnerPlaintext;
+
+  /**
+   * Constructs a TLSInnerPlaintext structure.
+   *
+   * @param {Uint8Array} content - The content bytes.
+   * @param {ContentType} type - The content type as a `ContentType` instance.
+   * @param {number} numZeros - The number of zero bytes to pad.
+   */
+  constructor(content: Uint8Array, type: ContentType, numZeros: number);
+}
+
+/**
+ * Represents a TLSCiphertext structure in the TLS 1.3 protocol.
+ * This class extends `Uint8Array` to encapsulate TLSCiphertext data.
+ */
+export class TLSCiphertext extends Uint8Array {
+  /**
+   * Creates a TLSCiphertext instance from a given array.
+   *
+   * @param {Uint8Array } array - The input array to parse.
+   * @returns {TLSCiphertext} A new instance of TLSCiphertext.
+   */
+  static from(array: Uint8Array): TLSCiphertext;
+
+  /**
+   * Constructs a TLSCiphertext structure.
+   *
+   * @param {Uint8Array} encrypted_record - The encrypted record bytes.
+   */
+  constructor(encrypted_record: Uint8Array);
+}
