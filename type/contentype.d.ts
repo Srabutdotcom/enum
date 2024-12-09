@@ -54,6 +54,23 @@ export class ContentType extends Enum {
    * @returns {TLSPlaintext} A TLSPlaintext object created with the specified parameters.
    */
   tlsPlainText(fragment: Uint8Array): TLSPlaintext;
+
+  /**
+   * Creates a `TLSInnerPlaintext` instance from content and zero padding.
+   *
+   * @param {Uint8Array} content - The content bytes for the `TLSInnerPlaintext` structure.
+   * @param {number} numZeros - The number of zero bytes to pad the structure.
+   * @returns {TLSInnerPlaintext} A new `TLSInnerPlaintext` instance.
+   */
+  tlsInnerPlaintext(content: Uint8Array, numZeros: number): TLSInnerPlaintext;
+
+  /**
+   * Creates a `TLSCiphertext` instance from the encrypted record.
+   *
+   * @param {Uint8Array} encrypted_record - The encrypted record bytes for the `TLSCiphertext` structure.
+   * @returns {TLSCiphertext} A new `TLSCiphertext` instance.
+   */
+  tlsCiphertext(encrypted_record: Uint8Array): TLSCiphertext;
 }
 
 /**
