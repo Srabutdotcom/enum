@@ -115,6 +115,8 @@ export class TLSCiphertext extends Uint8Array {
       struct.set(lengthOf,3);
       struct.set(encrypted_record, 5);
       super(struct)    
+      this.header = struct.subarray(0,5);
+      this.encrypted_record = encrypted_record
    }
 }
 

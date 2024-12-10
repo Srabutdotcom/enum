@@ -157,22 +157,32 @@ export class TLSInnerPlaintext extends Uint8Array {
 }
 
 /**
- * Represents a TLSCiphertext structure in the TLS 1.3 protocol.
- * This class extends `Uint8Array` to encapsulate TLSCiphertext data.
+ * Represents a TLSCiphertext structure in a TLS handshake.
+ * Extends `Uint8Array` to include additional TLS-specific data and methods.
  */
-export class TLSCiphertext extends Uint8Array {
+export declare class TLSCiphertext extends Uint8Array {
   /**
-   * Creates a TLSCiphertext instance from a given array.
-   *
-   * @param {Uint8Array } array - The input array to parse.
-   * @returns {TLSCiphertext} A new instance of TLSCiphertext.
+   * Constructs a new `TLSCiphertext` instance from an existing array.
+   * 
+   * @param array - The array containing the ciphertext data.
+   * @returns A new instance of `TLSCiphertext`.
    */
-  static from(array: Uint8Array): TLSCiphertext;
+  static from(array: Uint8Array | number[]): TLSCiphertext;
 
   /**
-   * Constructs a TLSCiphertext structure.
-   *
-   * @param {Uint8Array} encrypted_record - The encrypted record bytes.
+   * Constructs a `TLSCiphertext` instance.
+   * 
+   * @param encrypted_record - The encrypted record data.
    */
   constructor(encrypted_record: Uint8Array);
+
+  /**
+   * The header portion of the TLSCiphertext.
+   */
+  header: Uint8Array;
+
+  /**
+   * The encrypted record data within the TLSCiphertext.
+   */
+  encrypted_record: Uint8Array;
 }

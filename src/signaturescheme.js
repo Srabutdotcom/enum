@@ -4,7 +4,6 @@
 import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 import { sha256 } from "@noble/hashes/sha256"
-import { hkdfExpandLabel } from "./dep.ts"
 import { HandshakeType } from "./handshaketype.js";
 
 /**
@@ -162,8 +161,8 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
    return signature
 }
 
-export async function finished(serverHS_secret, certificateVerifyMsg) {
-   const finishedKey = hkdfExpandLabel(serverHS_secret, 'finished', new Uint8Array, 32);
+export async function finished(finishedKey, certificateVerifyMsg) {
+   //const finishedKey = hkdfExpandLabel(serverHS_secret, 'finished', new Uint8Array, 32);
    const finishedKeyCrypto = await crypto.subtle.importKey(
       "raw",
       finishedKey,
