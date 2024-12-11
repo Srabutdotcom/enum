@@ -44,11 +44,11 @@ export class ContentType extends Enum {
       )
    }
 
-   tlsInnerPlaintext(content, numZeros){
+   tlsInnerPlaintext(content, numZeros) {
       return new TLSInnerPlaintext(content, this, numZeros)
    }
 
-   tlsCiphertext(encrypted_record){
+   tlsCiphertext(encrypted_record) {
       return new TLSCiphertext(encrypted_record)
    }
 }
@@ -81,15 +81,15 @@ export class TLSPlaintext extends Uint8Array {
 }
 
 export class TLSInnerPlaintext extends Uint8Array {
-   static from(array){
+   static from(array) {
       const copy = Uint8Array.from(array);
-      const lastNonZeroIndex = copy.reduceRight((li,v,i)=>(li===-1 && v!==0? i:li),-1);
+      const lastNonZeroIndex = copy.reduceRight((li, v, i) => (li === -1 && v !== 0 ? i : li), -1);
       const content = copy.slice(0, lastNonZeroIndex);
       const type = ContentType.fromValue(copy[lastNonZeroIndex]);
       const numZeros = copy.length - 1 - lastNonZeroIndex;
       return new TLSInnerPlaintext(content, type, numZeros)
    }
-   constructor(content, type, numZeros) {
+   constructor(content, type, numZeros = 0) {
       const struct = new Uint8Array(content.length + 1 + numZeros);
       struct.set(content, 0);
       struct[content.length] = +type;
@@ -98,24 +98,24 @@ export class TLSInnerPlaintext extends Uint8Array {
 }
 
 export class TLSCiphertext extends Uint8Array {
-   static from(array){
+   static from(array) {
       const copy = Uint8Array.from(array);
       // NOTE should check contentType
       // NOTE legacy version can be bypassed
       const lengthOf = Uint16.from(copy.subarray(3));
-      const encrypted_record = copy.subarray(5, lengthOf+5);
+      const encrypted_record = copy.subarray(5, lengthOf + 5);
       return new TLSCiphertext(encrypted_record)
    }
-   constructor(encrypted_record){
-      const struct = new Uint8Array(encrypted_record.length+5);
+   constructor(encrypted_record) {
+      const struct = new Uint8Array(encrypted_record.length + 5);
       const lengthOf = Uint16.fromValue(encrypted_record.length);
       struct[0] = 23; // always application data
       struct[1] = 3; // major legacy version;
       struct[2] = 3; // minor legacy verions = TLS v1.2
-      struct.set(lengthOf,3);
+      struct.set(lengthOf, 3);
       struct.set(encrypted_record, 5);
-      super(struct)    
-      this.header = struct.subarray(0,5);
+      super(struct)
+      this.header = struct.subarray(0, 5);
       this.encrypted_record = encrypted_record
    }
 }
