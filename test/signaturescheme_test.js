@@ -88,7 +88,7 @@ Deno.test("Finished", async ()=>{
    const test = await SignatureScheme.RSA_PSS_PSS_SHA256.certificateVerifyMsg(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, rsaKey.privateKey)
    //const back = CertificateVerify.from(test)
    const serverHS_secret_fake = crypto.getRandomValues(new Uint8Array(32));
-   const _finished = await finished(serverHS_secret_fake, test);
+   const _finished = await finished(serverHS_secret_fake, 256, test);
    const finishedBack = Finished.from(_finished);
    assertEquals(_finished.toString(), finishedBack.toString())
 })

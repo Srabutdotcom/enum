@@ -143,37 +143,39 @@ export class Signature extends Constrained {
 }
 
 /**
- * Generates a signature from input data and a private RSA key.
- * @param {Uint8Array} clientHelloMsg - Client Hello message.
- * @param {Uint8Array} serverHelloMsg - Server Hello message.
- * @param {Uint8Array} certificateMsg - Certificate message.
- * @param {CryptoKey} RSAprivateKey - RSA private key.
- * @returns {Promise<Uint8Array>} The generated signature.
+ * Generates a signature from the provided handshake messages and an RSA private key.
+ *
+ * @param clientHelloMsg - The ClientHello message as a Uint8Array.
+ * @param serverHelloMsg - The ServerHello message as a Uint8Array.
+ * @param encryptedExtensionsMsg - The EncryptedExtensions message as a Uint8Array.
+ * @param certificateMsg - The Certificate message as a Uint8Array.
+ * @param RSAprivateKey - The RSA private key used for signing.
+ * @param sha - The hash algorithm to use (256, 384, or 512). Defaults to 256.
+ * @returns A promise that resolves to a Uint8Array containing the signature. The resulting object also includes the `transcriptHash` property.
  */
-export function signatureFrom(
+export declare function signatureFrom(
   clientHelloMsg: Uint8Array,
   serverHelloMsg: Uint8Array,
   encryptedExtensionsMsg: Uint8Array,
   certificateMsg: Uint8Array,
-  RSAprivateKey: CryptoKey
+  RSAprivateKey: CryptoKey,
+  sha?: 256 | 384 | 512
 ): Promise<Uint8Array>;
 
 /**
- * Verifies and generates the HMAC for the given data.
+ * Computes the Finished message verify_data using the provided finished key and handshake messages.
  *
- * @param {Uint8Array} finishedKey - The key used to compute the finished message..
- * @param {object} certificateVerifyMsg - The certificate verify message object.
- * @param {Uint8Array} certificateVerifyMsg.message.transcriptHash - The transcript hash from the message.
- * @returns {Promise<Uint8Array>} A promise that resolves to the verify_data HMAC value as a Uint8Array.
+ * @param finishedKey - The finished key as a Uint8Array.
+ * @param sha - The hash algorithm to use (256 or 384). Defaults to 256.
+ * @param messages - A variable number of handshake messages to include in the transcript hash.
+ * @returns A promise that resolves to a Finished instance containing the verify_data. The resulting object also includes the `transcriptHash` property.
  */
 export declare function finished(
   finishedKey: Uint8Array,
-  certificateVerifyMsg: {
-    message: {
-      transcriptHash: Uint8Array;
-    };
-  }
-): Promise<Uint8Array>;
+  sha?: 256 | 384,
+  ...messages: Uint8Array[]
+): Promise<Finished>;
+
 
 /**
  * Represents the output of the `finished` function.

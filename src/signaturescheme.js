@@ -3,7 +3,7 @@
 
 import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
-import { sha256 } from "@noble/hashes/sha256"
+import { sha256, sha384, sha512 } from "@noble/hashes/sha2"
 import { HandshakeType } from "./handshaketype.js";
 
 /**
@@ -117,7 +117,7 @@ export class Signature extends Constrained {
    }
 }
 
-async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey) {
+async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha = 256) {
    const leading = Uint8Array.of(
       //NOTE 64 space characters 
       32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
@@ -126,7 +126,12 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
       //NOTE single null char
       0
    )
-   const transcriptHash = sha256.create()
+
+   const hash = sha == 256 ? sha256.create() : 
+   sha == 384 ? sha384.create() :
+   sha == 512 ? sha512.create() : sha256.create();
+   
+   const transcriptHash = hash
       .update(clientHelloMsg)
       .update(serverHelloMsg)
       .update(encryptedExtensionsMsg)
@@ -141,7 +146,7 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
    const signBuffer = await crypto.subtle.sign(
       {
          name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-         saltLength: 256 / 8
+         saltLength: sha / 8
       },
       RSAprivateKey,
       data
@@ -157,25 +162,29 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
          data
    ) */
    const signature = new Uint8Array(signBuffer)
-   signature.transcriptHash = transcriptHash;
    return signature
 }
 
-export async function finished(finishedKey, certificateVerifyMsg) {
+export async function finished(finishedKey, sha = 256, ...messages) {
    //const finishedKey = hkdfExpandLabel(serverHS_secret, 'finished', new Uint8Array, 32);
    const finishedKeyCrypto = await crypto.subtle.importKey(
       "raw",
       finishedKey,
       {
          name: "HMAC",
-         hash: { name: "SHA-256" },
+         hash: { name: `SHA-${sha}` },
       },
       true,
       ["sign", "verify"]
    );
-   const transcriptHash = sha256.create()
-      .update(certificateVerifyMsg.message.signature.transcriptHash)
-      .update(certificateVerifyMsg.byte)
+
+   const hash = sha == 256 ? sha256.create() : 
+   sha == 384 ? sha384.create() : sha256.create();
+
+   const messagesStruct = Struct.createFrom(...messages);
+
+   const transcriptHash = hash
+      .update(Uint8Array.from(messagesStruct))
       .digest();
 
    const verify_data = await crypto.subtle.sign(
