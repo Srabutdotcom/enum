@@ -69,14 +69,16 @@ export class NamedGroup extends Enum {
     * @returns {Function} The key generation function.
     */
    get keyGen() {
+      if (this.#keyGen) return this.#keyGen
       switch (this.name) {
-         case "SECP256R1": return p256;
-         case "SECP384R1": return p384;
-         case "SECP521R1": return p521;
-         case "X25519": return x25519;
-         case "X448": return x448;
-         default: return x25519;
+         case "SECP256R1": this.#keyGen = p256; break;
+         case "SECP384R1": this.#keyGen = p384; break;
+         case "SECP521R1": this.#keyGen = p521; break;
+         case "X448": this.#keyGen = x448; break;
+         case "X25519":
+         default: this.#keyGen = x25519; break;
       }
+      return this.#keyGen
    }
 
    /**
@@ -90,16 +92,20 @@ export class NamedGroup extends Enum {
       return this.#privateKey
    }
 
+   set privateKey(key) { this.#privateKey = key }
+
    /**
     * Gets the public key associated with the NamedGroup.
     * 
     * @returns {Uint8Array} The public key.
     */
-   get publicKey() { 
-      if(this.#publicKey)return this.#publicKey;
+   get publicKey() {
+      if (this.#publicKey) return this.#publicKey;
       this.#publicKey = this.keyGen?.getPublicKey(this.privateKey);
       return this.#publicKey;
-    }
+   }
+
+   set publicKey(key) { this.#publicKey = key }
 
    /**
     * Computes the shared key with a peer's public key.
@@ -146,7 +152,7 @@ export class KeyExchange extends Constrained {
  * Represents a key share entry.
  */
 export class KeyShareEntry extends Struct {
-   
+
    static from(array) {
       const copy = Uint8Array.from(array);
       const group = NamedGroup.from(copy.subarray(0, 2));

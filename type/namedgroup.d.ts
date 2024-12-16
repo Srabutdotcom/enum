@@ -60,12 +60,19 @@ export class NamedGroup extends Enum {
      */
     get privateKey(): Uint8Array;
 
+    /** Sets the private key associated with the NamedGroup. */
+    set privateKey(key : Uint8Array);
+
     /**
      * Gets the public key associated with the NamedGroup.
      *
      * @returns {Uint8Array} The public key.
      */
     get publicKey(): Uint8Array;
+
+    
+    /** Sets the public key associated with the NamedGroup. */
+    set publicKey(key : Uint8Array);
 
     /**
      * Computes the shared key with a peer's public key.
