@@ -1,6 +1,5 @@
 import { Constrained, Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
-import type { Handshake } from "../src/handshaketype.js";
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
@@ -62,96 +61,57 @@ export class SignatureScheme extends Enum {
   get Uint16(): Uint16;
 
   /**
-   * Generates a CertificateVerify object.
-   * @param {Uint8Array} clientHelloMsg - Client Hello message.
-   * @param {Uint8Array} serverHelloMsg - Server Hello message.
-   * @param {Uint8Array} encryptedExtensionsMsg - encryptedExtensions message
-   * @param {Uint8Array} certificateMsg - Certificate message.
-   * @param {CryptoKey} RSAprivateKey - RSA private key.
-   * @returns {Promise<CertificateVerify>} CertificateVerify object.
+   * Creates a CertificateVerify handshake instance.
+   * @param clientHelloMsg The ClientHello message.
+   * @param serverHelloMsg The ServerHello message.
+   * @param encryptedExtensionsMsg The EncryptedExtensions message.
+   * @param certificateMsg The Certificate message.
+   * @param RSAprivateKey The RSA private key.
+   * @param sha The SHA variant (256, 384, or 512).
    */
   certificateVerify(
     clientHelloMsg: Uint8Array,
     serverHelloMsg: Uint8Array,
     encryptedExtensionsMsg: Uint8Array,
     certificateMsg: Uint8Array,
-    RSAprivateKey: CryptoKey
+    RSAprivateKey: CryptoKey,
+    sha: number,
   ): Promise<CertificateVerify>;
-  
-  /**
-   * Generates a CertificateVerify Handshake object.
-   * @param {Uint8Array} clientHelloMsg - Client Hello message.
-   * @param {Uint8Array} serverHelloMsg - Server Hello message.
-   * @param {Uint8Array} encryptedExtensionsMsg - encryptedExtensions message
-   * @param {Uint8Array} certificateMsg - Certificate message.
-   * @param {CryptoKey} RSAprivateKey - RSA private key.
-   * @returns {Promise<Handshake>} Handshake of CertificateVerify object.
-   */
-  certificateVerifyMsg(
-    clientHelloMsg: Uint8Array,
-    serverHelloMsg: Uint8Array,
-    encryptedExtensionsMsg: Uint8Array,
-    certificateMsg: Uint8Array,
-    RSAprivateKey: CryptoKey
-  ): Promise<Handshake>;
 }
 
 /**
- * Represents a CertificateVerify structure.
+ * Represents a CertificateVerify message.
  */
-export class CertificateVerify extends Uint8Array {
-  /** The signature algorithm used. */
-  algorithm: SignatureScheme;
-
-  /** The signature. */
-  signature: Uint8Array;
-
+export declare class CertificateVerify extends Uint8Array {
   /**
-   * Parses a byte array into a CertificateVerify object.
-   * @param {Uint8Array} array - The byte array to parse.
-   * @returns {CertificateVerify} The parsed CertificateVerify object.
+   * Creates a CertificateVerify instance from an array.
+   * @param array The input array.
    */
-  static from(array: Uint8Array): CertificateVerify;
+  static fromMsg(array: Uint8Array): CertificateVerify;
 
-  /**
-   * Constructs a new CertificateVerify object.
-   * @param {SignatureScheme} signatureScheme - The signature scheme.
-   * @param {Uint8Array} signature - The signature.
-   */
   constructor(signatureScheme: SignatureScheme, signature: Uint8Array);
+
+  algorithm: SignatureScheme;
+  signature: Uint8Array;
 }
 
 /**
- * Represents a constrained signature.
+ * Represents a constrained Signature.
  */
-export class Signature extends Constrained {
-  /** The raw opaque signature data. */
-  opaque: Uint8Array;
-
+export declare class Signature extends Constrained {
   /**
-   * Parses a byte array into a Signature object.
-   * @param {Uint8Array} array - The byte array to parse.
-   * @returns {Signature} The parsed Signature object.
+   * Creates a Signature instance from an array.
+   * @param array The input array.
    */
   static from(array: Uint8Array): Signature;
 
-  /**
-   * Constructs a new Signature object.
-   * @param {Uint8Array} opaque - The raw opaque signature data.
-   */
   constructor(opaque: Uint8Array);
+
+  opaque: Uint8Array;
 }
 
 /**
- * Generates a signature from the provided handshake messages and an RSA private key.
- *
- * @param clientHelloMsg - The ClientHello message as a Uint8Array.
- * @param serverHelloMsg - The ServerHello message as a Uint8Array.
- * @param encryptedExtensionsMsg - The EncryptedExtensions message as a Uint8Array.
- * @param certificateMsg - The Certificate message as a Uint8Array.
- * @param RSAprivateKey - The RSA private key used for signing.
- * @param sha - The hash algorithm to use (256, 384, or 512). Defaults to 256.
- * @returns A promise that resolves to a Uint8Array containing the signature. The resulting object also includes the `transcriptHash` property.
+ * Generates a signature for the CertificateVerify message.
  */
 export declare function signatureFrom(
   clientHelloMsg: Uint8Array,
@@ -159,41 +119,29 @@ export declare function signatureFrom(
   encryptedExtensionsMsg: Uint8Array,
   certificateMsg: Uint8Array,
   RSAprivateKey: CryptoKey,
-  sha?: 256 | 384 | 512
+  sha?: number,
 ): Promise<Uint8Array>;
 
 /**
- * Computes the Finished message verify_data using the provided finished key and handshake messages.
- *
- * @param finishedKey - The finished key as a Uint8Array.
- * @param sha - The hash algorithm to use (256 or 384). Defaults to 256.
- * @param messages - A variable number of handshake messages to include in the transcript hash.
- * @returns A promise that resolves to a Finished instance containing the verify_data. The resulting object also includes the `transcriptHash` property.
+ * Generates a Finished message.
  */
 export declare function finished(
   finishedKey: Uint8Array,
-  sha?: 256 | 384,
+  sha: number,
   ...messages: Uint8Array[]
 ): Promise<Finished>;
 
-
 /**
- * Represents the output of the `finished` function.
+ * Represents a Finished handshake message.
  */
-export declare class Finished {
+export declare class Finished extends Uint8Array {
   /**
-   * Constructs a Finished instance.
-   * @param verifyData - The computed verify data.
+   * Creates a Finished instance from a message.
+   * @param message The input message.
    */
-  constructor(verifyData: ArrayBuffer);
+  static fromMsg(message: Uint8Array): Finished;
 
-  /**
-   * The computed verify data.
-   */
-  verifyData: ArrayBuffer;
+  constructor(verify_data: Uint8Array);
 
-  /**
-   * The hash of the handshake transcript.
-   */
-  transcriptHash: ArrayBuffer;
+  verify_data: Uint8Array;
 }

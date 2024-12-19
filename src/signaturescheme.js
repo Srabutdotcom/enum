@@ -76,21 +76,17 @@ export class SignatureScheme extends Enum {
     */
    get Uint16() { return Uint16.fromValue(+this); }
 
-   async certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey) {
-      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey)
+   async certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha) {
+      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha)
       return new CertificateVerify(this, signature)
-   }
-   async certificateVerifyMsg(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey){
-      const certificateVerify = await this.certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey);
-      return HandshakeType.CERTIFICATE_VERIFY.handshake(certificateVerify);
    }
 }
 
 export class CertificateVerify extends Uint8Array {
-   static from(array) {
+   static fromMsg(array) {
       const copy = Uint8Array.from(array)
-      const algorithm = SignatureScheme.from(copy);
-      const signature = Signature.from(copy.subarray(2))
+      const algorithm = SignatureScheme.from(copy.subarray(4));
+      const signature = Signature.from(copy.subarray(6))
       return new CertificateVerify(algorithm, signature.opaque)
    }
    constructor(signatureScheme, signature) {
@@ -102,6 +98,7 @@ export class CertificateVerify extends Uint8Array {
       super(struct);
       this.algorithm = signatureScheme;
       this.signature = signature
+      return HandshakeType.CERTIFICATE_VERIFY.handshake(this);
    }
 }
 
@@ -161,8 +158,7 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
          sign,
          data
    ) */
-   const signature = new Uint8Array(signBuffer)
-   return signature
+   return new Uint8Array(signBuffer)
 }
 
 export async function finished(finishedKey, sha = 256, ...messages) {
@@ -204,9 +200,14 @@ export async function finished(finishedKey, sha = 256, ...messages) {
 }
 
 export class Finished extends Uint8Array {
+   static fromMsg(message){
+      const copy = Uint8Array.from(message)
+      return new Finished(copy.subarray(4))
+   }
    constructor(verify_data){
       super(verify_data);
       this.verify_data = verify_data 
+      return HandshakeType.FINISHED.handshake(this)
    }
 }
 
