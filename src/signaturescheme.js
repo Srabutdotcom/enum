@@ -76,8 +76,43 @@ export class SignatureScheme extends Enum {
     */
    get Uint16() { return Uint16.fromValue(+this); }
 
-   async certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha) {
-      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha)
+   get algo() {
+      switch (this) {
+         case 'ECDSA_SECP256R1_SHA256': return {
+            name: "ECDSA",
+            hash: "SHA-256"
+         }
+         case 'ECDSA_SECP384R1_SHA384': return {
+            name: "ECDSA",
+            hash: "SHA-384"
+         }
+         case 'ECDSA_SECP521R1_SHA512': return {
+            name: "ECDSA",
+            hash: "SHA-512"
+         }
+         case 'ED25519': return { name: 'Ed25519' }
+         case 'RSA_PSS_PSS_SHA384': return {
+            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+            saltLength: 384 / 8
+         }
+         case 'RSA_PSS_PSS_SHA512': return {
+            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+            saltLength: 512 / 8
+         }
+         case 'RSA_PSS_PSS_SHA256':
+         default: return {
+            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+            saltLength: 256 / 8
+         }
+      }
+      return {
+         name: "RSA-PSS",// RSAprivateKey.algorithm.name,
+         saltLength: 256 / 8
+      }
+   }
+
+   async certificateVerify(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey) {
+      const signature = await signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, this.algo)
       return new CertificateVerify(this, signature)
    }
 }
@@ -114,7 +149,7 @@ export class Signature extends Constrained {
    }
 }
 
-async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, sha = 256) {
+async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg, RSAprivateKey, algo) {
    const leading = Uint8Array.of(
       //NOTE 64 space characters 
       32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
@@ -124,10 +159,8 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
       0
    )
 
-   const hash = sha == 256 ? sha256.create() : 
-   sha == 384 ? sha384.create() :
-   sha == 512 ? sha512.create() : sha256.create();
-   
+   const hash = hashFromAlgo(algo)
+
    const transcriptHash = hash
       .update(clientHelloMsg)
       .update(serverHelloMsg)
@@ -141,10 +174,7 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
    )
 
    const signBuffer = await crypto.subtle.sign(
-      {
-         name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-         saltLength: sha / 8
-      },
+      algo,
       RSAprivateKey,
       data
    )
@@ -161,6 +191,21 @@ async function signatureFrom(clientHelloMsg, serverHelloMsg, encryptedExtensions
    return new Uint8Array(signBuffer)
 }
 
+function hashFromAlgo(algo) {
+   let sha
+   const { hash, saltLength } = algo;
+   if (hash) { sha = parseInt(hash.split("-")[1]); }
+   else if (saltLength) { sha = saltLength * 8 }
+   else { sha = 256 };
+   switch (sha) {
+      case 384: return sha384.create();
+      case 512: return sha512.create();
+      case 256:
+      default:
+         return sha256.create();
+   }
+}
+
 export async function finished(finishedKey, sha = 256, ...messages) {
    //const finishedKey = hkdfExpandLabel(serverHS_secret, 'finished', new Uint8Array, 32);
    const finishedKeyCrypto = await crypto.subtle.importKey(
@@ -174,8 +219,8 @@ export async function finished(finishedKey, sha = 256, ...messages) {
       ["sign", "verify"]
    );
 
-   const hash = sha == 256 ? sha256.create() : 
-   sha == 384 ? sha384.create() : sha256.create();
+   const hash = sha == 256 ? sha256.create() :
+      sha == 384 ? sha384.create() : sha256.create();
 
    const messagesStruct = Struct.createFrom(...messages);
 
@@ -195,18 +240,18 @@ export async function finished(finishedKey, sha = 256, ...messages) {
       verify_data,
       transcriptHash
    ) */
-   verify_data.transcriptHash = transcriptHash;
+   //verify_data.transcriptHash = transcriptHash;
    return new Finished(verify_data);
 }
 
 export class Finished extends Uint8Array {
-   static fromMsg(message){
+   static fromMsg(message) {
       const copy = Uint8Array.from(message)
       return new Finished(copy.subarray(4))
    }
-   constructor(verify_data){
+   constructor(verify_data) {
       super(verify_data);
-      this.verify_data = verify_data 
+      this.verify_data = verify_data
       return HandshakeType.FINISHED.handshake(this)
    }
 }
