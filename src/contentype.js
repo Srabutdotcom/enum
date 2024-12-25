@@ -81,6 +81,9 @@ export class TLSPlaintext extends Uint8Array {
 }
 
 export class TLSInnerPlaintext extends Uint8Array {
+   content;
+   type;
+   numZeros;
    static from(array) {
       const copy = Uint8Array.from(array);
       const lastNonZeroIndex = copy.reduceRight((li, v, i) => (li === -1 && v !== 0 ? i : li), -1);
@@ -93,7 +96,14 @@ export class TLSInnerPlaintext extends Uint8Array {
       const struct = new Uint8Array(content.length + 1 + numZeros);
       struct.set(content, 0);
       struct[content.length] = +type;
-      super(struct)
+      super(struct);
+      this.content = content;
+      this.type = type;
+      this.numZeros = numZeros
+   }
+   header(keyLength){
+      const lengthOf = this.length + keyLength;
+      return Uint8Array.of(+this.type, 3, 3, Math.trunc(lengthOf / 256), lengthOf % 256)
    }
 }
 
@@ -102,7 +112,7 @@ export class TLSCiphertext extends Uint8Array {
       const copy = Uint8Array.from(array);
       // NOTE should check contentType
       // NOTE legacy version can be bypassed
-      const lengthOf = Uint16.from(copy.subarray(3));
+      const lengthOf = Uint16.from(copy.subarray(3)).value;
       const encrypted_record = copy.subarray(5, lengthOf + 5);
       return new TLSCiphertext(encrypted_record)
    }
