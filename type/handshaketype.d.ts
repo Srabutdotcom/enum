@@ -128,4 +128,12 @@ export declare class Handshake extends Uint8Array {
   constructor(msg_type: HandshakeType, message: Uint8Array);
   /** return Uint8Array */
   get byte(): Uint8Array
+
+  /**
+   * Generates TLS inner plaintext by processing the current context with specified padding.
+   * 
+   * @param {number} numZeros - The number of zero bytes to use as padding in the TLS inner plaintext.
+   * @returns {Uint8Array} The formatted TLS inner plaintext data.
+   */
+  tlsInnerPlaintext(numZeros: number): Uint8Array;
 }

@@ -2,6 +2,7 @@
 // @ts-self-types="../type/handshaketype.d.ts"
 import { Enum } from "./enum.js";
 import { Struct, Uint24, Uint8 } from "./dep.ts";
+import { ContentType } from "./contentype.js"
 
 /**
  * Represents TLS 1.3 Handshake message types as defined in RFC 8446 Section 4
@@ -128,6 +129,9 @@ export class Handshake extends Uint8Array {
       this.items = struct.items
    }
    get byte(){ return Uint8Array.from(this)}
+   tlsInnerPlaintext(numZeros){
+      return ContentType.APPLICATION_DATA.tlsInnerPlaintext(this, numZeros)
+   }
 }
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
