@@ -3,6 +3,7 @@
 
 import { Uint8, Uint16, Struct } from "./dep.ts";
 import { Enum } from "./enum.js";
+import { HandshakeType } from "./handshaketype.js";
 import { Version } from "./version.js";
 
 /**
@@ -36,10 +37,10 @@ export class ContentType extends Enum {
    /**return 8 */
    get bit() { return 8 }
 
-   tlsPlainText(fragment) {
+   tlsPlaintext(fragment) {
       return TLSPlaintext.createFrom(
          this,
-         Version.TLS13,
+         fragment.msg_type == HandshakeType.CLIENT_HELLO ? Version.legacy: Version.TLS12,
          fragment
       )
    }

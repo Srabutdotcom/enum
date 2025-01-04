@@ -53,7 +53,7 @@ export class ContentType extends Enum {
    * @param {Uint8Array} fragment - The plaintext fragment to include.
    * @returns {TLSPlaintext} A TLSPlaintext object created with the specified parameters.
    */
-  tlsPlainText(fragment: Uint8Array): TLSPlaintext;
+  tlsPlaintext(fragment: Uint8Array): TLSPlaintext;
 
   /**
    * Creates a `TLSInnerPlaintext` instance from content and zero padding.
