@@ -40,7 +40,7 @@ export class ContentType extends Enum {
    tlsPlaintext(fragment) {
       return TLSPlaintext.createFrom(
          this,
-         fragment.msg_type == HandshakeType.CLIENT_HELLO ? Version.legacy: Version.TLS12,
+         fragment.msg_type == HandshakeType.CLIENT_HELLO ? Version.TLS10: Version.TLS12,
          fragment
       )
    }
