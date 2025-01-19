@@ -137,3 +137,24 @@ export declare class Handshake extends Uint8Array {
    */
   tlsInnerPlaintext(numZeros: number): Uint8Array;
 }
+
+declare class EndOfEarlyData extends Uint8Array {
+  /**
+   * Creates an `EndOfEarlyData` instance from a handshake array.
+   * @param array - The array containing handshake data.
+   * @returns An `EndOfEarlyData` instance if the type matches,
+   * otherwise throws a `TypeError` with the expected type.
+   */
+  static fromHandshake(array: Uint8Array): EndOfEarlyData | TypeError;
+
+  /**
+   * Constructs an empty `EndOfEarlyData` instance.
+   */
+  constructor();
+
+  /**
+   * Processes and retrieves handshake information for the `EndOfEarlyData` instance.
+   * @returns The result of the handshake process.
+   */
+  handshake(): Handshake;
+}
