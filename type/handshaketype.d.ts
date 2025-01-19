@@ -156,5 +156,5 @@ declare class EndOfEarlyData extends Uint8Array {
    * Processes and retrieves handshake information for the `EndOfEarlyData` instance.
    * @returns The result of the handshake process.
    */
-  handshake(): Handshake;
+  get handshake(): Handshake;
 }
