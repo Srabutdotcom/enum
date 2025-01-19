@@ -134,4 +134,15 @@ export class Handshake extends Uint8Array {
    }
 }
 
+export class EndOfEarlyData extends Uint8Array {
+   static fromHandshake(array){
+      const type = HandshakeType.fromValue(array.at(0));
+      if(type!==HandshakeType.END_OF_EARLY_DATA) return TypeError(`Expected ${HandshakeType.END_OF_EARLY_DATA.name}`)
+      return new EndOfEarlyData
+   }
+   constructor(){
+      super()
+   }
+}
+
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
