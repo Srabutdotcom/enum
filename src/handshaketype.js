@@ -143,7 +143,7 @@ export class EndOfEarlyData extends Uint8Array {
    constructor(){
       super()
    }
-   handshake(){ return HandshakeType.handshake(this)}
+   get handshake(){ return HandshakeType.handshake(this)}
 }
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
