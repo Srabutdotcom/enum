@@ -33,4 +33,16 @@ export class Cipher extends Enum {
      * @returns A `Uint8Array` containing the cipher suite identifier.
      */
     get Uint16(): Uint8Array;
+  
+    /**
+     * Get hash length for respective cipher
+     * @returns hash length either 32 or 48 
+     */
+    get hashLength(): number;
+
+    /**
+     * Get key length for respective cipher
+     * @returns key length either 16 or 32 
+     */
+    get keyLength(): number;
 }
