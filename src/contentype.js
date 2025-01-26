@@ -33,6 +33,7 @@ export class ContentType extends Enum {
    get Uint8() {
       return Uint8.fromValue(+this)
    }
+   get length(){ return 1 }
 
    /**return 8 */
    get bit() { return 8 }

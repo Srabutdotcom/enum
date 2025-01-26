@@ -2,7 +2,8 @@
 // @ts-self-types="../type/version.d.ts"
 
 import { Enum } from "./enum.js";
-import { Uint16 } from "./dep.ts";
+import { Constrained, Uint16 } from "./dep.ts";
+import { parseItems } from "./utils.js";
 
 
 /**
@@ -64,10 +65,11 @@ export class Version extends Enum {
 
    /**
     * Gets the bit size of the version (16 bits).
-    * 
     * @returns {number} - The bit size of the version.
     */
    get bit() { return 16 }
+
+   get Uint16() { return Uint16.fromValue(+this); }
 
    /**
     * Converts this Version instance to a ProtocolVersion.
@@ -120,6 +122,19 @@ export class ProtocolVersion extends Uint8Array {
    static from(array){
       const version = Version.from(array);
       return ProtocolVersion.fromVersion(version);
+   }
+}
+
+export class Versions extends Constrained {
+   static from(array){
+      const copy = Uint8Array.from(array);
+      const lengthOf = Uint16.from(copy).value;
+      const versions = parseItems(copy, 2, lengthOf, Version)
+      return new Versions(...versions)
+   }
+   constructor(...versions){
+      super(2, 254, ...versions.map(e=>e.Uint16));
+      this.versions = versions
    }
 }
 

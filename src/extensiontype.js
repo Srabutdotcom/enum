@@ -212,6 +212,7 @@ export class ExtensionType extends Enum {
     * @type {number}
     */
    get bit() { return 16 }
+   get length() { return 2 }
 
    extension(extension_data){return new Extension(this, extension_data)}
 }

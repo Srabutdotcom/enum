@@ -14,6 +14,7 @@ export class Cipher extends Enum {
    }
 
    get Uint16() { return Uint8Array.of(0x13, +this) }
+   get length() { return 2 }
 
    get hashLength() {
       return this.name.slice(-3) / 8;

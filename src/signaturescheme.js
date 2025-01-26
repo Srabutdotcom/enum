@@ -5,6 +5,7 @@ import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 import { sha256, sha384, sha512 } from "@noble/hashes/sha2"
 import { HandshakeType } from "./handshaketype.js";
+import { parseItems } from "./utils.js";
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
@@ -68,6 +69,7 @@ export class SignatureScheme extends Enum {
     * @returns {number} The bit length, which is always 16.
     */
    get bit() { return 16; }
+   get length() { return 2;}
 
    /**
     * Converts the SignatureScheme to a Uint16 representation.
@@ -121,13 +123,7 @@ export class SignatureSchemeList extends Constrained {
    static from(array){
       const copy = Uint8Array.from(array);
       const lengthOf = Uint16.from(copy).value;
-      const algorithms = new Set;
-      let offset = 2;
-      while(true){
-         const algorithm = SignatureScheme.from(copy.subarray(offset));offset+=2;
-         algorithms.add(algorithm);
-         if(offset>=lengthOf+2)break; 
-      }
+      const algorithms = parseItems(copy, 2, lengthOf, SignatureScheme);
       return new SignatureSchemeList(...algorithms)
    }
    constructor(...supported_signature_algorithms) {

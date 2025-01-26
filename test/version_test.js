@@ -1,4 +1,5 @@
 // Import your classes
+import { Versions } from "../src/version.js";
 import { Version, ProtocolVersion } from "../src/version.js";
 import { assertEquals } from "jsr:@std/assert";
 
@@ -62,4 +63,7 @@ Deno.test("ProtocolVersion Class - Constructor", () => {
 });
 
 const protocolVersion = ProtocolVersion.fromVersion(Version.TLS12);
+
+const versions = new Versions(Version.TLS13);
+
 

@@ -195,6 +195,7 @@ export class AlertDescription extends Enum {
 
    /**return 8 */
    get bit() { return 8 }
+   get length() { return 1 }
 
    get level() {
       const warning = [

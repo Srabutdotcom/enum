@@ -41,6 +41,11 @@ export declare class SignatureScheme extends Enum {
    * @returns The bit length, which is always 16.
    */
   get bit(): number;
+  /**
+     * Returns the byte length
+     * @returns {number} The byte length, which is always 2.
+     */
+  get length(): number;
 
   /**
    * Converts the SignatureScheme to a Uint16 representation.

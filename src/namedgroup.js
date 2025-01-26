@@ -3,6 +3,7 @@
 
 import { p256, p384, p521, x25519, x448, Uint16, Constrained, Struct } from "./dep.ts";
 import { Enum } from "./enum.js";
+import { parseItems } from "./utils.js";
 
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
@@ -44,6 +45,7 @@ export class NamedGroup extends Enum {
     * @returns {number} The bit length, which is always 16.
     */
    get bit() { return 16; }
+   get length() { return 2;}
 
    /**
     * Creates an instance of NamedGroup.
@@ -171,13 +173,7 @@ export class NamedGroupList extends Constrained {
    static from(array){
       const copy = Uint8Array.from(array);
       const lengthOf = Uint16.from(copy).value;
-      const namedGroups = new Set;
-      let offset = 2;
-      while(true){
-         const namedgroup = NamedGroup.from(copy.subarray(offset));offset+=2;
-         namedGroups.add(namedgroup);
-         if(offset>=lengthOf+2)break; 
-      }
+      const namedGroups = parseItems(copy, 2, lengthOf, NamedGroup)
       return new NamedGroupList(...namedGroups)
    }
    constructor(...named_group_list){

@@ -86,7 +86,7 @@ export class HandshakeType extends Enum {
     */
    static MESSAGE_HASH = new HandshakeType('MESSAGE_HASH', 0xFE);
 
-   
+
    /**
     * Check and return HandshakeType if valid
     *
@@ -99,51 +99,52 @@ export class HandshakeType extends Enum {
    }
 
    /**return 8 */
-   get bit(){return 8}
+   get bit() { return 8 }
+   get length() { return 1 }
 
-   handshake(message){
+   handshake(message) {
       return Handshake.fromMessage(this, message)
    }
 
-   get Uint8(){ return Uint8.fromValue(+this)}
+   get Uint8() { return Uint8.fromValue(+this) }
 }
 
 export class Handshake extends Uint8Array {
    msg_type
    message
-   static fromMessage(msg_type, message){
+   static fromMessage(msg_type, message) {
       return new Handshake(msg_type, message)
    }
-   static from(array){
+   static from(array) {
       const copy = Uint8Array.from(array)
       const msg_type = HandshakeType.fromValue(copy[0]);
       const lengthOf = Uint24.from(copy.subarray(1)).value;
       const message = copy.subarray(4, 4 + lengthOf)
       return new Handshake(msg_type, message)
    }
-   constructor(msg_type, message){
-      const struct = new Struct(msg_type.Uint8,  Uint24.fromValue(message.length), message)
+   constructor(msg_type, message) {
+      const struct = new Struct(msg_type.Uint8, Uint24.fromValue(message.length), message)
       super(struct)
       this.msg_type = msg_type;
       this.message = message
       this.items = struct.items
    }
-   get byte(){ return Uint8Array.from(this)}
-   tlsInnerPlaintext(numZeros){
+   get byte() { return Uint8Array.from(this) }
+   tlsInnerPlaintext(numZeros) {
       return ContentType.APPLICATION_DATA.tlsInnerPlaintext(this, numZeros)
    }
 }
 
 export class EndOfEarlyData extends Uint8Array {
-   static fromHandshake(array){
+   static fromHandshake(array) {
       const type = HandshakeType.fromValue(array.at(0));
-      if(type!==HandshakeType.END_OF_EARLY_DATA) return TypeError(`Expected ${HandshakeType.END_OF_EARLY_DATA.name}`)
+      if (type !== HandshakeType.END_OF_EARLY_DATA) return TypeError(`Expected ${HandshakeType.END_OF_EARLY_DATA.name}`)
       return new EndOfEarlyData
    }
-   constructor(){
+   constructor() {
       super()
    }
-   get handshake(){ return HandshakeType.END_OF_EARLY_DATA.handshake(this)}
+   get handshake() { return HandshakeType.END_OF_EARLY_DATA.handshake(this) }
 }
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
