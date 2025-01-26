@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert";
-import { NamedGroup } from "../src/namedgroup.js";
+import { NamedGroup, NamedGroupList } from "../src/namedgroup.js";
 
 Deno.test(
    "NamedGroup",
@@ -19,15 +19,9 @@ Deno.test(
    }
 )
 
-//const x25519 = NamedGroup.X25519.keyShareEntry(); 
 
-const x25519 = NamedGroup.X25519;
-      assertEquals(x25519.name, 'X25519')
-      const pub = x25519.keyGen.getPublicKey(x25519.privateKey);
-      assertEquals(pub.length, 32)
-      const peerPublicKey = crypto.getRandomValues(new Uint8Array(32));
-      assertEquals(peerPublicKey.length, 32)
-      const sharedKey = x25519.getSharedKey(peerPublicKey)
-      assertEquals(sharedKey.length, 32)
-
-debugger;
+Deno.test("NamedGroupList", () => {
+   const namedGroupList = new NamedGroupList(NamedGroup.X25519, NamedGroup.X448);
+   const backNGL = NamedGroupList.from(namedGroupList);
+   assertEquals(namedGroupList.toString(), backNGL.toString())
+})

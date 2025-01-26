@@ -167,7 +167,24 @@ export class KeyShareEntry extends Struct {
    }
 }
 
-
+export class NamedGroupList extends Constrained {
+   static from(array){
+      const copy = Uint8Array.from(array);
+      const lengthOf = Uint16.from(copy).value;
+      const namedGroups = new Set;
+      let offset = 2;
+      while(true){
+         const namedgroup = NamedGroup.from(copy.subarray(offset));offset+=2;
+         namedGroups.add(namedgroup);
+         if(offset>=lengthOf+2)break; 
+      }
+      return new NamedGroupList(...namedGroups)
+   }
+   constructor(...namedGroups){
+      super(2, 2**16-1, ...namedGroups.map(e=>e.Uint16));
+      this.namedGroups = namedGroups
+   }
+}
 
 
 
