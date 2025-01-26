@@ -180,9 +180,9 @@ export class NamedGroupList extends Constrained {
       }
       return new NamedGroupList(...namedGroups)
    }
-   constructor(...namedGroups){
-      super(2, 2**16-1, ...namedGroups.map(e=>e.Uint16));
-      this.namedGroups = namedGroups
+   constructor(...named_group_list){
+      super(2, 2**16-1, ...named_group_list.map(e=>e.Uint16));
+      this.named_group_list = named_group_list
    }
 }
 

@@ -2,6 +2,7 @@ import { SignatureScheme, CertificateVerify, finished, Finished } from "../src/s
 import { assertEquals } from "jsr:@std/assert";
 import { HexaDecimal, sha256 } from "../src/dep.ts";
 import { HandshakeType } from "../src/handshaketype.js"
+import { SignatureSchemeList } from "../src/signaturescheme.js";
 
 console.log(SignatureScheme.ED448);
 
@@ -17,6 +18,17 @@ Deno.test("SignatureAlgorithmSchema", () => {
    const back = SignatureScheme.from(test).Uint16;
    assertEquals(test, back)
 })
+
+Deno.test("SignatureSchemeList", ()=>{
+   const test = new SignatureSchemeList(
+      SignatureScheme.RSA_PSS_RSAE_SHA256,
+      SignatureScheme.RSA_PSS_RSAE_SHA384
+   )
+   
+   const back = SignatureSchemeList.from(test);
+   assertEquals(test.toString(), back.toString())
+})
+
 
 const clientHelloMsg = HexaDecimal.fromString(
    `01 00 00 c0 03 03 cb 34 ec b1 e7 81 63
@@ -122,7 +134,6 @@ const finished_key = HexaDecimal.fromString(
 const finished_0 = await finished(finished_key, 256, clientHelloMsg, serverHelloMsg, encryptedExtensionsMsg, certificateMsg);
 
 
-debugger;
 
 
 
