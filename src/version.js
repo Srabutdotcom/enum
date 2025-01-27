@@ -2,9 +2,7 @@
 // @ts-self-types="../type/version.d.ts"
 
 import { Enum } from "./enum.js";
-import { Constrained, Uint16 } from "./dep.ts";
-import { parseItems } from "./utils.js";
-
+import { Uint16 } from "./dep.ts";
 
 /**
  * Version class representing different protocol versions.

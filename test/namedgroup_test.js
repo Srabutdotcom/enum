@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert";
-import { NamedGroup, NamedGroupList } from "../src/namedgroup.js";
+import { NamedGroup } from "../src/namedgroup.js";
 
 Deno.test(
    "NamedGroup",
@@ -18,10 +18,3 @@ Deno.test(
 
    }
 )
-
-
-Deno.test("NamedGroupList", () => {
-   const namedGroupList = new NamedGroupList(NamedGroup.X25519, NamedGroup.X448);
-   const backNGL = NamedGroupList.from(namedGroupList);
-   assertEquals(namedGroupList.toString(), backNGL.toString())
-})

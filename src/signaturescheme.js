@@ -5,7 +5,6 @@ import { Constrained, Struct, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 import { sha256, sha384, sha512 } from "@noble/hashes/sha2"
 import { HandshakeType } from "./handshaketype.js";
-import { parseItems } from "./utils.js";
 
 /**
  * Enumeration of signature schemes as defined in RFC 8446.

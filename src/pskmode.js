@@ -1,9 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/pskmode.d.ts"
 
-import { Constrained, Uint8 } from "./dep.ts";
 import { Enum } from "./enum.js";
-import { parseItems } from "./utils.js";
 
 /**
  * PskKeyExchangeMode - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.4.2

@@ -3,7 +3,6 @@
 
 import { p256, p384, p521, x25519, x448, Uint16, Constrained, Struct } from "./dep.ts";
 import { Enum } from "./enum.js";
-import { parseItems } from "./utils.js";
 
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
