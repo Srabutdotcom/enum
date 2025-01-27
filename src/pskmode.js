@@ -39,19 +39,6 @@ export class PskKeyExchangeMode  extends Enum {
 
 }
 
-export class PskKeyExchangeModes extends Constrained {
-   static from(array){
-      const copy = Uint8Array.from(array);
-      const lengthOf = Uint8.from(copy).value;
-      const ke_modes = parseItems(copy, 1, lengthOf, PskKeyExchangeMode);
-      return new PskKeyExchangeModes(...ke_modes)
-   }
-   constructor(...ke_modes) {
-      super(1, 255, ...ke_modes.map(e => e.Uint8))
-      this.ke_modes = ke_modes;
-   }
-}
-
 /* const test = new PskKeyExchangeModes(PskKeyExchangeMode.PSK_KE);
 const back = PskKeyExchangeModes.from(test);  */
 

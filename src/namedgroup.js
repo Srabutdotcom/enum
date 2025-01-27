@@ -169,19 +169,5 @@ export class KeyShareEntry extends Struct {
    }
 }
 
-export class NamedGroupList extends Constrained {
-   static from(array){
-      const copy = Uint8Array.from(array);
-      const lengthOf = Uint16.from(copy).value;
-      const namedGroups = parseItems(copy, 2, lengthOf, NamedGroup)
-      return new NamedGroupList(...namedGroups)
-   }
-   constructor(...named_group_list){
-      super(2, 2**16-1, ...named_group_list.map(e=>e.Uint16));
-      this.named_group_list = named_group_list
-   }
-}
-
-
 
 // npx -p typescript tsc ./src/namedgroup.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

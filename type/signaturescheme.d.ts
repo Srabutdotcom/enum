@@ -136,25 +136,3 @@ export declare class Finished extends Uint8Array {
   constructor(verify_data: Uint8Array);
   verify_data: Uint8Array;
 }
-
-export declare class SignatureSchemeList extends Constrained {
-  /**
-   * Parses a `SignatureSchemeList` from a `Uint8Array`.
-   * @param array - The input array containing signature schemes data.
-   * @returns A new instance of `SignatureSchemeList`.
-   * @throws {Error} If the input array is invalid or incomplete.
-   */
-  static from(array: Uint8Array): SignatureSchemeList;
-
-  /**
-   * Constructs a `SignatureSchemeList`.
-   * @param supported_signature_algorithms - A list of supported signature schemes.
-   * @throws {Error} If the constraints are not satisfied.
-   */
-  constructor(...supported_signature_algorithms: SignatureScheme[]);
-
-  /**
-   * The list of supported signature schemes.
-   */
-  readonly supported_signature_algorithms: SignatureScheme[];
-}

@@ -119,19 +119,6 @@ export class SignatureScheme extends Enum {
    }
 }
 
-export class SignatureSchemeList extends Constrained {
-   static from(array){
-      const copy = Uint8Array.from(array);
-      const lengthOf = Uint16.from(copy).value;
-      const algorithms = parseItems(copy, 2, lengthOf, SignatureScheme);
-      return new SignatureSchemeList(...algorithms)
-   }
-   constructor(...supported_signature_algorithms) {
-      super(2, 2 ** 16 - 2, ...supported_signature_algorithms.map(e => e.Uint16))
-      this.supported_signature_algorithms = supported_signature_algorithms;
-   }
-}
-
 export class CertificateVerify extends Uint8Array {
    static fromMsg(array) {
       const copy = Uint8Array.from(array)

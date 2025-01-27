@@ -68,6 +68,7 @@ export class Version extends Enum {
     * @returns {number} - The bit size of the version.
     */
    get bit() { return 16 }
+   get length(){ return 2 }
 
    get Uint16() { return Uint16.fromValue(+this); }
 
@@ -122,19 +123,6 @@ export class ProtocolVersion extends Uint8Array {
    static from(array){
       const version = Version.from(array);
       return ProtocolVersion.fromVersion(version);
-   }
-}
-
-export class Versions extends Constrained {
-   static from(array){
-      const copy = Uint8Array.from(array);
-      const lengthOf = Uint16.from(copy).value;
-      const versions = parseItems(copy, 2, lengthOf, Version)
-      return new Versions(...versions)
-   }
-   constructor(...versions){
-      super(2, 254, ...versions.map(e=>e.Uint16));
-      this.versions = versions
    }
 }
 
