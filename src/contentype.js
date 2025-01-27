@@ -3,8 +3,10 @@
 
 import { Uint8, Uint16, Struct } from "./dep.ts";
 import { Enum } from "./enum.js";
+import { Handshake } from "./handshaketype.js";
 import { HandshakeType } from "./handshaketype.js";
 import { Version } from "./version.js";
+import { Alert } from "./alert.js"
 
 /**
  * The higher-level protocol used to process the enclosed
@@ -79,6 +81,16 @@ export class TLSPlaintext extends Uint8Array {
       this.version = version;
       this.fragment = fragment
       this.items = struct.items
+
+      this.parseFragment();
+   }
+   parseFragment(){
+      if(this.type == ContentType.HANDSHAKE){
+         this.handshake = Handshake.from(this.fragment);
+      }
+      if(this.type == ContentType.ALERT){
+         this.alert = Alert.from(this.fragment);
+      }
    }
 }
 

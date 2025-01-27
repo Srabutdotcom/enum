@@ -41,7 +41,7 @@ Deno.test(
          120  // NO_APPLICATION_PROTOCOL
       ];
 
-      assertEquals(AlertDescription.values().map(e => e.value).sort((a, b) => a - b), tls13AlertDescriptionValues);
+      assertEquals(AlertDescription.values().sort((a, b) => a - b), tls13AlertDescriptionValues);
    }
 )
 

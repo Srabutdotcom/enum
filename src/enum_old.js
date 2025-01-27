@@ -1,8 +1,6 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/enum.d.ts"
 
-import { BiMap } from "./bimap.js";
-
 /**
  * Abstract base class for creating enumeration types in JavaScript
  * @abstract
@@ -21,7 +19,7 @@ import { BiMap } from "./bimap.js";
  */
 export class Enum {
     /** @private @static @type {Map<Function, Map<string, Enum>>} */
-    static #instances = new BiMap();
+    static #instances = new Map();
 
     /** @private @static @type {Set<Function>} */
     static #frozen = new Set();
@@ -52,25 +50,27 @@ export class Enum {
         this.#ordinal = this.constructor.size;
 
         // Register instance
-        if (!Enum.#instances.hasKey(this.constructor)) {
-            Enum.#instances.set(this.constructor, new BiMap());
+        if (!Enum.#instances.has(this.constructor)) {
+            Enum.#instances.set(this.constructor, new Map());
         }
 
-        const instanceMap = Enum.#instances.getValue(this.constructor);
+        const instanceMap = Enum.#instances.get(this.constructor);
 
         if (Enum.#frozen.has(this.constructor)) {
             throw new Error(`Cannot add new enum constant ${name} to frozen enum ${this.constructor.name}`);
         }
 
-        if (instanceMap.hasKey(name)) {
+        if (instanceMap.has(name)) {
             throw new Error(`Duplicate enum constant name: ${name}`);
         }
 
-        if (instanceMap.hasValue(value)) {
-            throw new Error(`Duplicate enum value: ${value} for constant ${name}`);
+        for (const [, instance] of instanceMap) {
+            if (instance.value === value) {
+                throw new Error(`Duplicate enum value: ${value} for constant ${name}`);
+            }
         }
 
-        instanceMap.set(name, value);
+        instanceMap.set(name, this);
     }
 
     /**
@@ -110,7 +110,7 @@ export class Enum {
      * @returns {Enum[]} Array of all enum constants
      */
     static values() {
-        const instanceMap = Enum.#instances.getValue(this) || new Map();
+        const instanceMap = Enum.#instances.get(this) || new Map();
         return Array.from(instanceMap.values());
     }
 
@@ -119,7 +119,7 @@ export class Enum {
      * @returns {string[]} Array of all enum constant names
      */
     static names() {
-        const instanceMap = Enum.#instances.getValue(this) || new Map();
+        const instanceMap = Enum.#instances.get(this) || new Map();
         return Array.from(instanceMap.keys());
     }
 
@@ -130,11 +130,11 @@ export class Enum {
      * @throws {Error} If no constant exists with the given name
      */
     static valueOf(name) {
-        const instanceMap = Enum.#instances.getValue(this);
-        if (!instanceMap || !instanceMap.hasKey(name)) {
+        const instanceMap = Enum.#instances.get(this);
+        if (!instanceMap || !instanceMap.has(name)) {
             throw new Error(`No enum constant ${this.name}.${name}`);
         }
-        return instanceMap.getValue(name);
+        return instanceMap.get(name);
     }
 
     /**
@@ -144,13 +144,11 @@ export class Enum {
      * @throws {Error} If no constant exists with the given value
      */
     static fromValue(value) {
-        //const instance = this.values().find(inst => inst.value === value);
-        const biMap = Enum.#instances.getValue(this);
-        if(!biMap.hasValue(value)){
-            throw new Error(`No enum constant with value ${value} in ${this.name}`);    
+        const instance = this.values().find(inst => inst.value === value);
+        if (!instance) {
+            throw new Error(`No enum constant with value ${value} in ${this.name}`);
         }
-        const key = biMap.getKey(value);
-        return this[key]
+        return instance;
     }
 
     /**
