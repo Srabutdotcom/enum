@@ -34,6 +34,7 @@ export class PskKeyExchangeMode  extends Enum {
    get length() { return 1 }
 
    get Uint8() { return Uint8Array.of(+this)}
+   get byte() { return this.Uint8 }
 
 }
 

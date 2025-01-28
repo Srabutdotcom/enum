@@ -107,6 +107,7 @@ export class HandshakeType extends Enum {
    }
 
    get Uint8() { return Uint8.fromValue(+this) }
+   get byte() { return this.Uint8 }
 }
 
 export class Handshake extends Uint8Array {

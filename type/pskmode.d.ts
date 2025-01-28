@@ -21,9 +21,10 @@ export declare class PskKeyExchangeMode extends Enum {
   static from(octet: Uint8Array): PskKeyExchangeMode;
 
   /** Returns the bit value for the mode (8). */
-  readonly bit: number;
+  get bit(): number;
 
   /** Returns the Uint8Array representation of the mode. */
-  readonly Uint8: Uint8Array;
+  get Uint8(): Uint8Array;
+  get byte(): Uint8Array;
 }
 

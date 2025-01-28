@@ -51,6 +51,8 @@ export class Version extends Enum {
    * @returns {number} The bit size of the version.
    */
   get bit(): number;
+  get Uint16(): Uint8Array;
+  get byte(): Uint8Array;
   /**
    * Returns the byte length
    * @returns {number} The byte length, which is always 2.

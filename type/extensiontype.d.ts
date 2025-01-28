@@ -95,6 +95,7 @@ export class ExtensionType extends Enum {
    * The corresponding Uint16 representation of the extension type.
    */
   get Uint16(): Uint16;
+  get byte(): Uint16;
 
   /**
    * The bit length of the extension type.

@@ -50,6 +50,7 @@ export class NamedGroup extends Enum {
    * @returns {Uint16} The Uint16 representation of the NamedGroup.
    */
   get Uint16(): Uint16;
+  get byte(): Uint16;
 
   /**
    * Gets the key generation algorithm associated with the NamedGroup.

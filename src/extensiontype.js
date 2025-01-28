@@ -205,6 +205,7 @@ export class ExtensionType extends Enum {
    get Uint16() {
       return Uint16.fromValue(+this)
    }
+   get byte() { return this.Uint16 }
 
    /**
     * Bit 16

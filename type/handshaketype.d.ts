@@ -89,6 +89,7 @@ export declare class HandshakeType extends Enum {
    * Returns the Uint8 representation of the handshake type.
    */
   get Uint8(): Uint8Array;
+  get byte(): Uint8Array;
 }
 
 /**

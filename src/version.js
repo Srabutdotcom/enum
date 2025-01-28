@@ -69,6 +69,7 @@ export class Version extends Enum {
    get length(){ return 2 }
 
    get Uint16() { return Uint16.fromValue(+this); }
+   get byte(){ return this.Uint16 }
 
    /**
     * Converts this Version instance to a ProtocolVersion.

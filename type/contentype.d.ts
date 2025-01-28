@@ -38,6 +38,7 @@ export class ContentType extends Enum {
    * @type {Uint8}
    */
   get Uint8(): Uint8;
+  get byte(): Uint8;
 
   /**
    * Returns the bit size of the ContentType.

@@ -52,6 +52,7 @@ export declare class SignatureScheme extends Enum {
    * @returns The Uint16 representation of the SignatureScheme.
    */
   get Uint16(): Uint16;
+  get byte(): Uint16;
 
   /**
    * Retrieves the algorithm details for the SignatureScheme.
