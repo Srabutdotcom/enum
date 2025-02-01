@@ -1,7 +1,5 @@
-import { SignatureScheme, CertificateVerify, finished, Finished } from "../src/signaturescheme.js";
+import { SignatureScheme } from "../src/signaturescheme.js";
 import { assertEquals } from "jsr:@std/assert";
-import { HexaDecimal } from "../src/dep.ts";
-import { HandshakeType } from "../src/handshaketype.js"
 
 console.log(SignatureScheme.ED448);
 
