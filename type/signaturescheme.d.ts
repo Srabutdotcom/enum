@@ -42,9 +42,9 @@ export declare class SignatureScheme extends Enum {
    */
   get bit(): number;
   /**
-     * Returns the byte length
-     * @returns {number} The byte length, which is always 2.
-     */
+   * Returns the byte length
+   * @returns {number} The byte length, which is always 2.
+   */
   get length(): number;
 
   /**
@@ -74,12 +74,13 @@ export declare class SignatureScheme extends Enum {
     serverHelloMsg: Uint8Array,
     encryptedExtensionsMsg: Uint8Array,
     certificateMsg: Uint8Array,
-    RSAprivateKey: CryptoKey
+    RSAprivateKey: CryptoKey,
   ): Promise<CertificateVerify>;
 }
 
 export declare class CertificateVerify extends Uint8Array {
   static fromMsg(array: Uint8Array): CertificateVerify;
+  static from(array: Uint8Array): CertificateVerify;
   constructor(signatureScheme: SignatureScheme, signature: Uint8Array);
   algorithm: SignatureScheme;
   signature: Uint8Array;
@@ -107,7 +108,7 @@ export declare function signatureFrom(
   encryptedExtensionsMsg: Uint8Array,
   certificateMsg: Uint8Array,
   RSAprivateKey: CryptoKey,
-  algo: { name: string; hash?: string; saltLength?: number }
+  algo: { name: string; hash?: string; saltLength?: number },
 ): Promise<Uint8Array>;
 
 /**
@@ -116,8 +117,10 @@ export declare function signatureFrom(
  * @returns The appropriate hash instance.
  */
 export declare function hashFromAlgo(
-  algo: { hash?: string; saltLength?: number }
-): ReturnType<typeof sha256.create | typeof sha384.create | typeof sha512.create>;
+  algo: { hash?: string; saltLength?: number },
+): ReturnType<
+  typeof sha256.create | typeof sha384.create | typeof sha512.create
+>;
 
 /**
  * Creates a Finished instance from the provided key and messages.

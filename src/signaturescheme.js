@@ -126,6 +126,7 @@ export class CertificateVerify extends Uint8Array {
       const signature = Signature.from(copy.subarray(6))
       return new CertificateVerify(algorithm, signature.opaque)
    }
+   static from = CertificateVerify.fromMsg
    constructor(signatureScheme, signature) {
       const signatureConstrained = new Signature(signature);
       const struct = new Struct(
