@@ -12,6 +12,6 @@ for (const e of codes) {
 
 const eoData = new EndOfEarlyData;
 const eoDataHandshake = eoData.handshake;
-const eoDataTlsInnerPlaintext = eoDataHandshake.tlsInnerPlaintext();
+
 
 
