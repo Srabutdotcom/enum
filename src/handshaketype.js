@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/handshaketype.d.ts"
 import { Enum } from "./enum.js";
-import { Struct, Uint24, Uint8 } from "./dep.ts";
-import { ContentType } from "./contentype.js"
+import { Uint8 } from "./dep.ts";
+
 
 /**
  * Represents TLS 1.3 Handshake message types as defined in RFC 8446 Section 4
@@ -101,51 +101,9 @@ export class HandshakeType extends Enum {
    /**return 8 */
    get bit() { return 8 }
    get length() { return 1 }
-
-   handshake(message) {
-      return Handshake.fromMessage(this, message)
-   }
-
    get Uint8() { return Uint8.fromValue(+this) }
    get byte() { return this.Uint8 }
 }
 
-export class Handshake extends Uint8Array {
-   msg_type
-   message
-   static fromMessage(msg_type, message) {
-      return new Handshake(msg_type, message)
-   }
-   static from(array) {
-      const copy = Uint8Array.from(array)
-      const msg_type = HandshakeType.fromValue(copy[0]);
-      const lengthOf = Uint24.from(copy.subarray(1)).value;
-      const message = copy.subarray(4, 4 + lengthOf)
-      return new Handshake(msg_type, message)
-   }
-   constructor(msg_type, message) {
-      const struct = new Struct(msg_type.Uint8, Uint24.fromValue(message.length), message)
-      super(struct)
-      this.msg_type = msg_type;
-      this.message = message
-      this.items = struct.items
-   }
-   get byte() { return Uint8Array.from(this) }
-   tlsInnerPlaintext(numZeros) {
-      return ContentType.APPLICATION_DATA.tlsInnerPlaintext(this, numZeros)
-   }
-}
-
-export class EndOfEarlyData extends Uint8Array {
-   static fromHandshake(array) {
-      const type = HandshakeType.fromValue(array.at(0));
-      if (type !== HandshakeType.END_OF_EARLY_DATA) return TypeError(`Expected ${HandshakeType.END_OF_EARLY_DATA.name}`)
-      return new EndOfEarlyData
-   }
-   constructor() {
-      super()
-   }
-   get handshake() { return HandshakeType.END_OF_EARLY_DATA.handshake(this) }
-}
 
 // npx -p typescript tsc ./src/handshaketype.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

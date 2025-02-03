@@ -79,83 +79,9 @@ export declare class HandshakeType extends Enum {
   get bit(): number;
 
   /**
-   * Creates a `Handshake` object from this type and a message.
-   * @param message - The message associated with the handshake.
-   * @returns {Handshake}
-   */
-  handshake(message: Uint8Array): Handshake;
-
-  /**
    * Returns the Uint8 representation of the handshake type.
    */
   get Uint8(): Uint8Array;
   get byte(): Uint8Array;
 }
 
-/**
- * Represents a TLS Handshake message.
- */
-export declare class Handshake extends Uint8Array {
-  /**
-   * The handshake message type.
-   */
-  readonly msg_type: HandshakeType;
-
-  /**
-   * The handshake message payload.
-   */
-  readonly message: Uint8Array;
-
-  /**
-   * Creates a `Handshake` object from a message type and payload.
-   * @param msg_type - The type of handshake message.
-   * @param message - The handshake message payload.
-   * @returns {Handshake}
-   */
-  static fromMessage(msg_type: HandshakeType, message: Uint8Array): Handshake;
-
-  /**
-   * Parses a `Handshake` object from a `Uint8Array`.
-   * @param array - The array containing the handshake message data.
-   * @returns {Handshake} The parsed Handshake object.
-   */
-  static from(array: Uint8Array): Handshake;
-
-  /**
-   * Creates a new `Handshake` object.
-   * @param msg_type - The handshake type.
-   * @param message - The handshake message payload.
-   */
-  constructor(msg_type: HandshakeType, message: Uint8Array);
-  /** return Uint8Array */
-  get byte(): Uint8Array
-
-  /**
-   * Generates TLS inner plaintext by processing the current context with specified padding.
-   * 
-   * @param {number} numZeros - The number of zero bytes to use as padding in the TLS inner plaintext.
-   * @returns {Uint8Array} The formatted TLS inner plaintext data.
-   */
-  tlsInnerPlaintext(numZeros: number): Uint8Array;
-}
-
-declare class EndOfEarlyData extends Uint8Array {
-  /**
-   * Creates an `EndOfEarlyData` instance from a handshake array.
-   * @param array - The array containing handshake data.
-   * @returns An `EndOfEarlyData` instance if the type matches,
-   * otherwise throws a `TypeError` with the expected type.
-   */
-  static fromHandshake(array: Uint8Array): EndOfEarlyData | TypeError;
-
-  /**
-   * Constructs an empty `EndOfEarlyData` instance.
-   */
-  constructor();
-
-  /**
-   * Processes and retrieves handshake information for the `EndOfEarlyData` instance.
-   * @returns The result of the handshake process.
-   */
-  get handshake(): Handshake;
-}
