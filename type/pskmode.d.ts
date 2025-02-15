@@ -1,4 +1,4 @@
-import { Constrained } from "../src/dep.ts";
+import { Constrained, Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**
@@ -24,7 +24,7 @@ export declare class PskKeyExchangeMode extends Enum {
   get bit(): number;
 
   /** Returns the Uint8Array representation of the mode. */
-  get Uint8(): Uint8Array;
-  get byte(): Uint8Array;
+  get Uint8(): Uint8;
+  get byte(): Uint8;
 }
 

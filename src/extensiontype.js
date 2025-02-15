@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/extensiontype.d.ts"
 
-import { Uint16, Constrained, Struct } from "./dep.ts";
+import { Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
@@ -215,10 +215,9 @@ export class ExtensionType extends Enum {
    get bit() { return 16 }
    get length() { return 2 }
 
-   extension(extension_data){return new Extension(this, extension_data)}
 }
 
-export class ExtensionData extends Constrained {
+/* export class ExtensionData extends Constrained {
    opaque
    static fromOpaque(opaque) { return new ExtensionData(opaque) }
    static from(array) {
@@ -247,7 +246,7 @@ export class Extension extends Struct {
       const extension_data = ExtensionData.from(copy.subarray(2));
       return new Extension(extension_type, extension_data.opaque)
    }
-}
+} */
 
 
 

@@ -18,5 +18,7 @@ export class KeyUpdateRequest extends Enum {
     static from(octet: Uint8Array): KeyUpdateRequest;
     /**return 8 */
     get bit(): number;
+    get byte(): Uint8;
 }
+import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";

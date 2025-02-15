@@ -17,6 +17,7 @@ export class AlertLevel extends Enum {
     static from(octet: Uint8Array): AlertLevel;
     /**return 8 */
     get bit(): number;
+    get byte(): Uint8Array;
 }
 /**
  * Enum class representing various TLS alert descriptions based on RFC 8446.
@@ -152,6 +153,7 @@ export class AlertDescription extends Enum {
     /**return 8 */
     get bit(): number;
     get level(): AlertLevel;
+    get byte(): Uint8;
 }
 declare class Alert extends Uint8Array {
     /**
@@ -186,4 +188,5 @@ declare class Alert extends Uint8Array {
      */
     static from(array: Uint8Array): Alert;
  }
+import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";

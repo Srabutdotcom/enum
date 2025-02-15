@@ -1,3 +1,4 @@
+import { Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**
@@ -32,8 +33,8 @@ export class Cipher extends Enum {
      * Gets the 2-byte identifier of the cipher suite.
      * @returns A `Uint8Array` containing the cipher suite identifier.
      */
-    get Uint16(): Uint8Array;
-    get byte(): Uint8Array;
+    get Uint16(): Uint16;
+    get byte(): Uint16;
   
     /**
      * Get hash length for respective cipher

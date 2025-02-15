@@ -1,3 +1,4 @@
+import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**
@@ -81,7 +82,7 @@ export declare class HandshakeType extends Enum {
   /**
    * Returns the Uint8 representation of the handshake type.
    */
-  get Uint8(): Uint8Array;
-  get byte(): Uint8Array;
+  get Uint8(): Uint8;
+  get byte(): Uint8;
 }
 
