@@ -71,58 +71,8 @@ export class Version extends Enum {
    get Uint16() { return Uint16.fromValue(+this); }
    get byte(){ return this.Uint16 }
 
-   /**
-    * Converts this Version instance to a ProtocolVersion.
-    * 
-    * @returns {ProtocolVersion} A ProtocolVersion instance representing this Version.
-    */
-   protocolVersion(){
-      return ProtocolVersion.fromVersion(this)
-   }
 }
 
-/**
- * Represents a Protocol Version as a 16-bit unsigned integer.
- * Extends Uint16 to handle 2-byte representations of protocol versions.
- */
-export class ProtocolVersion extends Uint8Array {
-   /**
-    * The `Version` instance associated with this `ProtocolVersion`.
-    * @type {Version}
-    */
-   version
-   /**
-    * Creates a ProtocolVersion instance from a Version.
-    * 
-    * @param {Version|number} version - A `Version` instance or a version number (as a 16-bit integer).
-    */
-   constructor(version){
-      const uint16 = Uint16.fromValue(+version);
-      super(uint16);
-      this.version = version
-   }
-   /**
-    * Creates a new ProtocolVersion from a Version instance.
-    * 
-    * @static
-    * @param {Version} version - The `Version` instance to convert to a ProtocolVersion.
-    * @returns {ProtocolVersion} A new `ProtocolVersion` instance representing the specified version.
-    */
-   static fromVersion(version){
-      return new ProtocolVersion(version)
-   }
-   /**
-    * Parses a Uint8Array and creates a ProtocolVersion.
-    * 
-    * @static
-    * @param {Uint8Array} array - A 2-byte array representing a protocol version.
-    * @returns {ProtocolVersion} A new `ProtocolVersion` instance based on the parsed array.
-    * @throws {Error} If the array does not represent a valid Version.
-    */
-   static from(array){
-      const version = Version.from(array);
-      return ProtocolVersion.fromVersion(version);
-   }
-}
+
 
 // npx -p typescript tsc ./src/version.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

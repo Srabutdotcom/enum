@@ -58,46 +58,8 @@ export class Version extends Enum {
    * @returns {number} The byte length, which is always 2.
    */
   get length(): number;
-  /**
-   * Converts this Version instance to a ProtocolVersion.
-   *
-   * @returns {ProtocolVersion} A ProtocolVersion instance representing this Version.
-   */
-  protocolVersion(): ProtocolVersion;
+  
 }
-/**
- * Represents a Protocol Version as a 16-bit unsigned integer.
- * Extends Uint16 to handle 2-byte representations of protocol versions.
- */
-export class ProtocolVersion extends Uint16 {
-  /**
-   * Creates a ProtocolVersion instance from a Version.
-   *
-   * @param {Version | number} version - A `Version` instance or a version number (as a 16-bit integer).
-   */
-  constructor(version: Version | number);
-  /**
-   * The `Version` instance associated with this `ProtocolVersion`.
-   * @type {Version}
-   */
-  version: Version;
-  /**
-   * Creates a new ProtocolVersion from a Version instance.
-   *
-   * @static
-   * @param {Version} version - The `Version` instance to convert to a ProtocolVersion.
-   * @returns {ProtocolVersion} A new `ProtocolVersion` instance representing the specified version.
-   */
-  static fromVersion(version: Version): ProtocolVersion;
-  /**
-   * Parses a Uint8Array and creates a ProtocolVersion.
-   *
-   * @static
-   * @param {Uint8Array} array - A 2-byte array representing a protocol version.
-   * @returns {ProtocolVersion} A new `ProtocolVersion` instance based on the parsed array.
-   * @throws {Error} If the array does not represent a valid Version.
-   */
-  static from(array: Uint8Array): ProtocolVersion;
-}
+
 
 import { Enum } from "../type/enum.d.ts";
