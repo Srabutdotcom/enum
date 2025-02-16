@@ -1,5 +1,5 @@
 // Import your classes
-import { Version, ProtocolVersion } from "../src/version.js";
+import { Version } from "../src/version.js";
 import { assertEquals } from "jsr:@std/assert";
 
 // Helper function to create Uint8Array from two bytes
@@ -40,28 +40,6 @@ Deno.test("Version Class - parse method", () => {
 
 });
 
-Deno.test("ProtocolVersion Class - fromVersion method", () => {
-  const protocolVersion = ProtocolVersion.fromVersion(Version.TLS12);
-  assertEquals(protocolVersion instanceof ProtocolVersion, true, "Expected instance to be a ProtocolVersion");
-  assertEquals(protocolVersion.version, Version.TLS12, "Expected ProtocolVersion to match Version.TLS12");
-});
-
-Deno.test("ProtocolVersion Class - from method", () => {
-  const array = toUint8Array(0x0301); // TLS10
-  const protocolVersion = ProtocolVersion.from(array);
-
-  assertEquals(protocolVersion instanceof ProtocolVersion, true, "Expected instance to be a ProtocolVersion");
-  assertEquals(protocolVersion.version, Version.TLS10, "Expected ProtocolVersion to match Version.TLS10");
-});
-
-Deno.test("ProtocolVersion Class - Constructor", () => {
-  const protocolVersion = new ProtocolVersion(Version.TLS13);
-
-  assertEquals(protocolVersion instanceof ProtocolVersion, true, "Expected instance to be a ProtocolVersion");
-  assertEquals(protocolVersion.version, Version.TLS13, "Expected ProtocolVersion to match Version.TLS13");
-});
-
-const protocolVersion = ProtocolVersion.fromVersion(Version.TLS12);
 
 
 
