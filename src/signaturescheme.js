@@ -78,28 +78,29 @@ export class SignatureScheme extends Enum {
 
    get algo() {
       switch (this) {
-         case 'ECDSA_SECP256R1_SHA256': return {
+         case SignatureScheme.ECDSA_SECP256R1_SHA256: return {
             name: "ECDSA",
             hash: "SHA-256"
          }
-         case 'ECDSA_SECP384R1_SHA384': return {
+         case SignatureScheme.ECDSA_SECP384R1_SHA384: return {
             name: "ECDSA",
             hash: "SHA-384"
          }
-         case 'ECDSA_SECP521R1_SHA512': return {
+         case SignatureScheme.ECDSA_SECP521R1_SHA512: return {
             name: "ECDSA",
             hash: "SHA-512"
          }
-         case 'ED25519': return { name: 'Ed25519' }
-         case 'RSA_PSS_PSS_SHA384': return {
+         case SignatureScheme.ED25519: return { name: 'Ed25519' }
+         case SignatureScheme.ED448: return { name: 'Ed448' }
+         case SignatureScheme.RSA_PSS_PSS_SHA384: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
             saltLength: 384 / 8
          }
-         case 'RSA_PSS_PSS_SHA512': return {
+         case SignatureScheme.RSA_PSS_PSS_SHA512: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
             saltLength: 512 / 8
          }
-         case 'RSA_PSS_PSS_SHA256':
+         case SignatureScheme.RSA_PSS_PSS_SHA256:
          default: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
             saltLength: 256 / 8
