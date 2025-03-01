@@ -92,18 +92,21 @@ export class SignatureScheme extends Enum {
          }
          case SignatureScheme.ED25519: return { name: 'Ed25519' }
          case SignatureScheme.ED448: return { name: 'Ed448' }
+         case SignatureScheme.RSA_PSS_RSAE_SHA384:
          case SignatureScheme.RSA_PSS_PSS_SHA384: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 384 / 8
+            saltLength: 48 // 384 / 8
          }
+         case SignatureScheme.RSA_PSS_RSAE_SHA512:
          case SignatureScheme.RSA_PSS_PSS_SHA512: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 512 / 8
+            saltLength: 64 // 512 / 8
          }
+         case SignatureScheme.RSA_PSS_RSAE_SHA256:
          case SignatureScheme.RSA_PSS_PSS_SHA256:
          default: return {
             name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 256 / 8
+            saltLength: 32 // 256 / 8
          }
       }
       return {
