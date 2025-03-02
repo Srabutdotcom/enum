@@ -66,7 +66,7 @@ export class SignatureScheme extends Enum {
     * @returns {number} The bit length, which is always 16.
     */
    get bit() { return 16; }
-   get length() { return 2;}
+   get length() { return 2; }
 
    /**
     * Converts the SignatureScheme to a Uint16 representation.
@@ -79,34 +79,48 @@ export class SignatureScheme extends Enum {
    get algo() {
       switch (this) {
          case SignatureScheme.ECDSA_SECP256R1_SHA256: return {
-            name: "ECDSA",
-            hash: "SHA-256"
+            import: EcKeyImportParams(256),
+            sign: EcdsaParams(256),
+            verify: EcdsaParams(256)
          }
          case SignatureScheme.ECDSA_SECP384R1_SHA384: return {
-            name: "ECDSA",
-            hash: "SHA-384"
+            import: EcKeyImportParams(384),
+            sign: EcdsaParams(384),
+            verify: EcdsaParams(384)
          }
          case SignatureScheme.ECDSA_SECP521R1_SHA512: return {
-            name: "ECDSA",
-            hash: "SHA-512"
+            import: EcKeyImportParams(521),
+            sign: EcdsaParams(512),
+            verify: EcdsaParams(512)
          }
-         case SignatureScheme.ED25519: return { name: 'Ed25519' }
-         case SignatureScheme.ED448: return { name: 'Ed448' }
+         case SignatureScheme.ED25519: return {
+            import: { name: 'Ed25519' },
+            sign: { name: 'Ed25519' },
+            verify: { name: 'Ed25519' }
+         }
+         case SignatureScheme.ED448: return {
+            import: { name: 'Ed448' },
+            sign: { name: 'Ed448' },
+            verify: { name: 'Ed448' }
+         }
          case SignatureScheme.RSA_PSS_RSAE_SHA384:
          case SignatureScheme.RSA_PSS_PSS_SHA384: return {
-            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 48 // 384 / 8
+            import: RsaHashedImportParams(384),
+            sign: RsaPssParams(384),
+            verify: RsaPssParams(384),
          }
          case SignatureScheme.RSA_PSS_RSAE_SHA512:
          case SignatureScheme.RSA_PSS_PSS_SHA512: return {
-            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 64 // 512 / 8
+            import: RsaHashedImportParams(512),
+            sign: RsaPssParams(512),
+            verify: RsaPssParams(512),
          }
          case SignatureScheme.RSA_PSS_RSAE_SHA256:
          case SignatureScheme.RSA_PSS_PSS_SHA256:
          default: return {
-            name: "RSA-PSS",// RSAprivateKey.algorithm.name,
-            saltLength: 32 // 256 / 8
+            import: RsaHashedImportParams(256),
+            sign: RsaPssParams(256),
+            verify: RsaPssParams(256),
          }
       }
       return {
@@ -116,6 +130,26 @@ export class SignatureScheme extends Enum {
    }
 
 }
+
+const EcdsaParams = (num) => ({
+   name: "ECDSA",
+   hash: `SHA-${num}`
+})
+
+const RsaPssParams = (num) => ({
+   name: "RSA-PSS",
+   saltLength: num / 8
+})
+
+const EcKeyImportParams = (num) => ({
+   name: "ECDSA",
+   namedCurve: `P-${num}`
+})
+
+const RsaHashedImportParams = (num) => ({
+   name: "RSA-PSS",
+   hash: `SHA-${num}`
+})
 
 
 // npx -p typescript tsc ./src/signaturescheme.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

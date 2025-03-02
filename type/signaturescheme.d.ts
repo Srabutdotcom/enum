@@ -58,7 +58,11 @@ export declare class SignatureScheme extends Enum {
    * Retrieves the algorithm details for the SignatureScheme.
    * @returns An object describing the algorithm and hash details.
    */
-  get algo(): { name: string; hash?: string; saltLength?: number };
+  get algo(): { 
+    import: object,
+    sign: object,
+    verify: object,
+  };
 
 }
 
