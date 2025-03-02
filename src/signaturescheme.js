@@ -48,6 +48,10 @@ export class SignatureScheme extends Enum {
    static PRIVATE_USE = new SignatureScheme('PRIVATE_USE', 0xFFFF);
    */
 
+   static ecdsa_brainpoolP256r1_sha256 = new SignatureScheme('ecdsa_brainpoolP256r1_sha256', 0x081a);
+   static ecdsa_brainpoolP384r1_sha384 = new SignatureScheme('ecdsa_brainpoolP384r1_sha384', 0x081b);
+   static ecdsa_brainpoolP512r1_sha512 = new SignatureScheme('ecdsa_brainpoolP512r1_sha512', 0x081c);
+
    /**
     * Parses an octet array and returns a valid SignatureScheme.
     * 
