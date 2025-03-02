@@ -155,7 +155,7 @@ export class AlertDescription extends Enum {
     get level(): AlertLevel;
     get byte(): Uint8;
 }
-declare class Alert extends Uint8Array {
+export declare class Alert extends Uint8Array {
     /**
      * The alert level (0 for warning, 1 for fatal).
      */
