@@ -190,7 +190,7 @@ export class ExtensionType extends Enum {
     */
    static RENEGOTIATION_INFO = new ExtensionType("RENEGOTIATION_INFO", 65281);
 
-   static EC_POINT_FORMAT = new ExtensionType("EC_POINT_FORMAT", 11);
+   static EC_POINT_FORMATS = new ExtensionType("EC_POINT_FORMATS", 11);
    static ENCRYPTED_THEN_MAC = new ExtensionType("ENCRYPTED_THEN_MAC", 22);
    static EXTENDED_MASTER_SECRET = new ExtensionType("EXTENDED_MASTER_SECRET", 23);
 

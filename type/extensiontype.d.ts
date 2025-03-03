@@ -83,6 +83,12 @@ export class ExtensionType extends Enum {
 
   /** Renegotiation Info - 65281 */
   static RENEGOTIATION_INFO: ExtensionType;
+  /** EC_POINT_FORMATS - 11 */
+  static EC_POINT_FORMATS : ExtensionType;
+  /** ENCRYPTED_THEN_MAC - 22 */
+  static ENCRYPTED_THEN_MAC : ExtensionType;
+  /** EXTENDED_MASTER_SECRET - 23 */
+  static EXTENDED_MASTER_SECRET : ExtensionType;
 
   /**
    * Check octet and return the corresponding ExtensionType.
