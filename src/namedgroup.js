@@ -103,7 +103,7 @@ export class NamedGroup extends Enum {
     */
    get publicKey() {
       if (this.#publicKey) return this.#publicKey;
-      this.#publicKey = this.keyGen?.getPublicKey(this.privateKey);
+      this.#publicKey = this.keyGen?.getPublicKey(this.privateKey, false);
       return this.#publicKey;
    }
 
