@@ -1,6 +1,6 @@
 // @ts-self-types="../type/cipher.d.ts"
 
-import { Uint16 } from "./dep.ts";
+import { sha256, sha384, Uint16 } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 export class Cipher extends Enum {
@@ -53,5 +53,16 @@ export class Cipher extends Enum {
    get keyLength() {
       return this.name.startsWith('AES_128') ? 16 : 32
    }
+
+   get hash(){
+      const num = parseSHA(this);
+      if(num == 256) return sha256;
+      if(num == 384) return sha384;
+      return sha256
+   }
 }
 
+function parseSHA(str) {
+   const match = str.name.match(/SHA(\d+)/);
+   return match ? parseInt(match[1], 10) : null;
+}

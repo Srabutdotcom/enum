@@ -1,4 +1,4 @@
-import { Uint16 } from "../src/dep.ts";
+import { Uint16, sha256, sha384 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**
@@ -47,4 +47,6 @@ export class Cipher extends Enum {
      * @returns key length either 16 or 32 
      */
     get keyLength(): number;
+
+    get hash(): typeof sha256 | typeof sha384;
 }
