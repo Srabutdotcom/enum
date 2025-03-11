@@ -11,6 +11,7 @@ export class NamedGroup extends Enum {
    #keyGen;
    #privateKey;
    #publicKey;
+   #keyPair;
 
    /* Elliptic Curve Groups (ECDHE) */
    static SECP256R1 = new NamedGroup('SECP256R1', 0x0017);
@@ -124,9 +125,59 @@ export class NamedGroup extends Enum {
     * 
     * @returns {KeyShareEntry} A new KeyShareEntry instance.
     */
-   keyShareEntry() {
-      const key_exchange = KeyExchange.fromKey(this.publicKey);
+   async keyShareEntry() {
+      const key_exchange = KeyExchange.fromKey(await this.exportPublicKey());
       return new KeyShareEntry(this, key_exchange);
+   }
+
+   async keyPair(){
+      if(this.#keyPair)return this.#keyPair
+      let algo
+      switch (this) {
+         case NamedGroup.X25519:{
+            algo = "X25519"
+            break;
+         }
+         case NamedGroup.SECP256R1: {
+            algo =  { name: "ECDH", namedCurve: "P-256" };
+            break;
+         }
+         case NamedGroup.SECP384R1: {
+            algo =  { name: "ECDH", namedCurve: "P-384" };
+            break;
+         }
+      }
+      this.#keyPair||= await generateKey(algo);
+      return this.#keyPair;
+   }
+
+   async exportPublicKey(){
+      const bits = await crypto.subtle.exportKey("raw", (await this.keyPair()).publicKey)
+      return new Uint8Array(bits)
+   }
+
+   async sharedKey(publicKey) {
+      let algo, length
+      switch (this) {
+         case NamedGroup.X25519:
+            algo = "X25519";
+            length = 256;
+            break;
+         case NamedGroup.SECP256R1:
+            algo = "ECDH";
+            length = 256;
+            break
+         case NamedGroup.SECP384R1:
+            algo = "ECDH";
+            length = 384
+            break;
+      }
+      const bits =  await crypto.subtle.deriveBits(
+         { name: algo, public: publicKey },
+         (await this.keyPair()).privateKey,
+         length // Output key length (384 bits for P-384)
+     )
+     return new Uint8Array(bits)
    }
 }
 
@@ -169,5 +220,11 @@ export class KeyShareEntry extends Struct {
    }
 }
 
-
+async function generateKey(algo) {
+   return await crypto.subtle.generateKey(
+      algo,
+      true,
+      ["deriveKey", "deriveBits"]
+   );
+}
 // npx -p typescript tsc ./src/namedgroup.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist

@@ -93,6 +93,25 @@ export class NamedGroup extends Enum {
    * @returns {KeyShareEntry} A new KeyShareEntry instance.
    */
   keyShareEntry(): KeyShareEntry;
+
+  /**
+   * Generates or retrieves the key pair for this named group
+   * @returns {Promise<CryptoKeyPair>} The generated or cached key pair
+   */
+  keyPair(): Promise<CryptoKeyPair>;
+
+  /**
+   * Exports the public key in raw format
+   * @returns {Promise<Uint8Array>} The raw public key bytes
+   */
+  exportPublicKey(): Promise<Uint8Array>;
+
+  /**
+   * Derives a shared secret using the local private key and peer's public key
+   * @param {CryptoKey} publicKey - The peer's public key
+   * @returns {Promise<Uint8Array>} The derived shared secret
+   */
+  sharedKey(publicKey: CryptoKey): Promise<Uint8Array>;
 }
 
 /**
