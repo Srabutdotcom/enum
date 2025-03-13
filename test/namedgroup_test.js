@@ -27,13 +27,25 @@ const x25519 = NamedGroup.X25519;
 
 const x25519_keyPair = await x25519.keyPair();
 const x25519_publicKeyByte = await x25519.exportPublicKey();
-const x25519_keyShareEntry = await x25519.keyShareEntry();
-
+const x25519_keyShareEntryAsync = await x25519.keyShareEntryAsync();
+const x25519_shared = x25519.getSharedKey(x25519_publicKeyByte);
+const x25519_keyShareEntry = x25519.keyShareEntry();
 
 const secP384R1 = NamedGroup.SECP384R1;
 const p384_keys = await secP384R1.keyPair();
 const p384_pub = await secP384R1.exportPublicKey();
+const secP384R1_shared = secP384R1.getSharedKey(p384_pub);
+const secP384R1_keyShareEntry = secP384R1.keyShareEntry();
 const pri = secP384R1.privateKey;
+
+const p256 = NamedGroup.SECP256R1;
+
+const p256_keyPair = await p256.keyPair();
+const p256_publicKeyByte = await p256.exportPublicKey();
+const p256_keyShareEntryAsync = await p256.keyShareEntryAsync();
+const p256_shared = p256.getSharedKey(p256_publicKeyByte);
+const p256_keyShareEntry = p256.keyShareEntry();
+
 
 
 debugger;

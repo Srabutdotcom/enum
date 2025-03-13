@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/namedgroup.d.ts"
 
-import { p256, p384, p521, x25519, x448, Uint16, Constrained, Struct } from "./dep.ts";
+import { p256, p384, p521, x25519, x448, Uint16, Constrained, Struct, safeuint8array } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
@@ -45,7 +45,7 @@ export class NamedGroup extends Enum {
     * @returns {number} The bit length, which is always 16.
     */
    get bit() { return 16; }
-   get length() { return 2;}
+   get length() { return 2; }
 
    /**
     * Creates an instance of NamedGroup.
@@ -117,7 +117,9 @@ export class NamedGroup extends Enum {
     * @returns {Uint8Array} The shared secret.
     */
    getSharedKey(peerPublicKey) {
-      return this.keyGen?.getSharedSecret(this.#privateKey, peerPublicKey);
+      const sharedKey = this.keyGen?.getSharedSecret(this.privateKey, peerPublicKey);
+      if([NamedGroup.SECP256R1.name, NamedGroup.SECP384R1.name].includes(this.name))return sharedKey.slice(1);
+      return sharedKey;
    }
 
    /**
@@ -125,33 +127,37 @@ export class NamedGroup extends Enum {
     * 
     * @returns {KeyShareEntry} A new KeyShareEntry instance.
     */
-   async keyShareEntry() {
-      const key_exchange = KeyExchange.fromKey(await this.exportPublicKey());
-      return new KeyShareEntry(this, key_exchange);
+   async keyShareEntryAsync() {
+      const key_exchange = KeyExchange.fromKey(await this.exportPublicKey()).key_exchange;
+      return KeyShareEntry.fromGroupKey(this, key_exchange);
    }
 
-   async keyPair(){
-      if(this.#keyPair)return this.#keyPair
+   keyShareEntry() {
+      return KeyShareEntry.fromGroupKey(this, this.publicKey);
+   }
+
+   async keyPair() {
+      if (this.#keyPair) return this.#keyPair
       let algo
       switch (this) {
-         case NamedGroup.X25519:{
+         case NamedGroup.X25519: {
             algo = "X25519"
             break;
          }
          case NamedGroup.SECP256R1: {
-            algo =  { name: "ECDH", namedCurve: "P-256" };
+            algo = { name: "ECDH", namedCurve: "P-256" };
             break;
          }
          case NamedGroup.SECP384R1: {
-            algo =  { name: "ECDH", namedCurve: "P-384" };
+            algo = { name: "ECDH", namedCurve: "P-384" };
             break;
          }
       }
-      this.#keyPair||= await generateKey(algo);
+      this.#keyPair ||= await generateKey(algo);
       return this.#keyPair;
    }
 
-   async exportPublicKey(){
+   async exportPublicKey() {
       const bits = await crypto.subtle.exportKey("raw", (await this.keyPair()).publicKey)
       return new Uint8Array(bits)
    }
@@ -172,27 +178,27 @@ export class NamedGroup extends Enum {
             length = 384
             break;
       }
-      const bits =  await crypto.subtle.deriveBits(
+      const bits = await crypto.subtle.deriveBits(
          { name: algo, public: publicKey },
          (await this.keyPair()).privateKey,
          length // Output key length (384 bits for P-384)
-     )
-     return new Uint8Array(bits)
+      )
+      return new Uint8Array(bits)
    }
 }
 
 /**
  * Represents a key exchange mechanism.
  */
-export class KeyExchange extends Constrained {
+export class KeyExchange_0 extends Constrained {
 
-   static fromKey(octet) { return new KeyExchange(octet); }
+   static fromKey(octet) { return new KeyExchange_0(octet); }
 
    static from(array) {
       const copy = Uint8Array.from(array);
       const lengthOf = Uint16.from(copy.subarray(0, 2)).value;
       const octet = copy.subarray(2, 2 + lengthOf);
-      return new KeyExchange(octet);
+      return new KeyExchange_0(octet);
    }
 
    constructor(octet) {
@@ -201,22 +207,86 @@ export class KeyExchange extends Constrained {
    }
 }
 
+export class KeyExchange extends Uint8Array {
+   #lengthOf
+   #key_exchange
+   static sanitize(array) {
+      if (isUint8Array(array) == false) throw Error(`Expected Uint8Array`)
+      const lengthOf = Uint16.from(array).value;
+      if (lengthOf < 1) throw Error(`Minimum length is 1`)
+      if (lengthOf > 2 ** 16 - 1) throw Error(`Minimum length is 2**16-1`)
+      return [array.slice(0, 2 + lengthOf)]
+   }
+   static fromKey(key) {
+      if (isUint8Array(key) == false) throw Error(`Expected Uint8Array`)
+      const lengthOf = Uint16.fromValue(key.length)
+      return new KeyExchange(
+         safeuint8array(lengthOf, key)
+      );
+   }
+
+   static from(array) {
+      return new KeyExchange(array);
+   }
+
+   constructor(...args) {
+      args = isUint8Array(args[0]) ? KeyExchange.sanitize(args[0]) : args;
+      super(...args);
+   }
+
+   get lengthOf() {
+      if (this.#lengthOf) return this.#lengthOf
+      this.#lengthOf ||= Uint16.from(this.subarray(0, 2)).value;
+      return this.#lengthOf;
+   }
+
+   get key_exchange() {
+      if (this.#key_exchange) return this.#key_exchange;
+      this.#key_exchange ||= this.subarray(2, 2 + this.lengthOf);
+      return this.#key_exchange
+   }
+}
+
 /**
  * Represents a key share entry.
  */
-export class KeyShareEntry extends Struct {
+export class KeyShareEntry_0 extends Struct {
 
    static from(array) {
       const copy = Uint8Array.from(array);
       const group = NamedGroup.from(copy.subarray(0, 2));
       const key_exchange = KeyExchange.from(copy.subarray(2));
-      return new KeyShareEntry(group, key_exchange);
+      return new KeyShareEntry_0(group, key_exchange);
    }
 
    constructor(group, key_exchange) {
       super(group.Uint16, key_exchange);
       this.group = group;
       this.key_exchange = key_exchange.key_exchange;
+   }
+}
+
+export class KeyShareEntry extends Uint8Array {
+   #group;
+   #key_exchange;
+   static fromGroupKey(group, key_exchange){
+      return KeyShareEntry.from(
+         safeuint8array(group.byte, KeyExchange.fromKey(key_exchange))
+      )
+   }
+   static from(array){ return new KeyShareEntry(array) }
+   constructor(...args) {
+      super(...args)
+   }
+   get group() {
+      if (this.#group) return this.#group;
+      this.#group ||= NamedGroup.from(this.subarray(0, 2));
+      return this.#group;
+   }
+   get key_exchange() {
+      if (this.#key_exchange) return this.#key_exchange;
+      this.#key_exchange ||= KeyExchange.from(this.subarray(2)).key_exchange;
+      return this.#key_exchange;
    }
 }
 
@@ -227,4 +297,7 @@ async function generateKey(algo) {
       ["deriveKey", "deriveBits"]
    );
 }
+
+const isUint8Array = v => v instanceof Uint8Array
+
 // npx -p typescript tsc ./src/namedgroup.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
