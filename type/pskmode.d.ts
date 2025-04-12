@@ -1,4 +1,4 @@
-import { Constrained, Uint8 } from "../src/dep.ts";
+import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**

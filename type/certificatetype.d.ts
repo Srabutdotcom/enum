@@ -1,5 +1,5 @@
 import { Enum } from "../src/enum.js";
-import { Constrained, Uint8, x509 } from "../src/dep.ts";
+import { Uint8 } from "../src/dep.ts";
 
 /**
  * Represents TLS Certificate Types.

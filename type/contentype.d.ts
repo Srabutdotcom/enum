@@ -1,6 +1,5 @@
 import { Uint8 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
-import { Version } from "../src/version.js";
 
 /**
  * Represents the higher-level protocol used to process the enclosed fragment.
