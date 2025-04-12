@@ -1,4 +1,4 @@
-import { Constrained, Uint16 } from "../src/dep.ts";
+import { Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 import { sha256, sha384, sha512 } from "@noble/hashes/sha2";
 

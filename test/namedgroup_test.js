@@ -2,7 +2,7 @@ import { assertEquals } from "jsr:@std/assert";
 import { NamedGroup } from "../src/namedgroup.js";
 import { p384 } from "@noble/curves/p384";
 import elliptic from "elliptic"
-import { safeuint8array } from "../src/dep.ts";
+import { unity } from "../src/dep.ts";
 import ECKey from "ec-key"
 
 Deno.test(
@@ -25,30 +25,6 @@ Deno.test(
 
 const x25519 = NamedGroup.X25519;
 
-const x25519_keyPair = await x25519.keyPair();
-const x25519_publicKeyByte = await x25519.exportPublicKey();
-const x25519_keyShareEntryAsync = await x25519.keyShareEntryAsync();
-const x25519_shared = x25519.getSharedKey(x25519_publicKeyByte);
-const x25519_keyShareEntry = x25519.keyShareEntry();
-
-const secP384R1 = NamedGroup.SECP384R1;
-const p384_keys = await secP384R1.keyPair();
-const p384_pub = await secP384R1.exportPublicKey();
-const secP384R1_shared = secP384R1.getSharedKey(p384_pub);
-const secP384R1_keyShareEntry = secP384R1.keyShareEntry();
-const pri = secP384R1.privateKey;
-
-const p256 = NamedGroup.SECP256R1;
-
-const p256_keyPair = await p256.keyPair();
-const p256_publicKeyByte = await p256.exportPublicKey();
-const p256_keyShareEntryAsync = await p256.keyShareEntryAsync();
-const p256_shared = p256.getSharedKey(p256_publicKeyByte);
-const p256_keyShareEntry = p256.keyShareEntry();
-
-
-
-debugger;
 
 var EC = elliptic.ec;
 var ec = new EC('p384');
@@ -57,23 +33,15 @@ var ec = new EC('p384');
 var key1 = ec.genKeyPair();
 var key2 = ec.genKeyPair();
 var publicKey1 = key1.getPublic()
-var publicKey1Buffer = safeuint8array(0x04, publicKey1.getX().toBuffer(), publicKey1.getY().toBuffer());
+var publicKey1Buffer = unity(0x04, publicKey1.getX().toBuffer(), publicKey1.getY().toBuffer());
 var publicKey2Buffer = publicKey1.encode('buffer');
 
 var privateKey1 = key1.getPrivate().toBuffer();
 var publicKey2 = key2.getPublic()
 
-
-const priv = p384.utils.randomPrivateKey();
-const publ = p384.getPublicKey(priv, false);
-const shar = p384.getSharedSecret(priv, p384_pub);
-const shar_p384 = await secP384R1.sharedKey(await importECPublicKey(publ));
-debugger;
-
 //const key = ECKey;
 
 const _null = null;
-debugger;
 
 async function generateKey() {
    return await crypto.subtle.generateKey(

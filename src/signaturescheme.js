@@ -72,13 +72,7 @@ export class SignatureScheme extends Enum {
    get bit() { return 16; }
    get length() { return 2; }
 
-   /**
-    * Converts the SignatureScheme to a Uint16 representation.
-    * 
-    * @returns {Uint16} The Uint16 representation of the SignatureScheme.
-    */
-   get Uint16() { return Uint16.fromValue(+this); }
-   get byte() { return this.Uint16 }
+   get byte() { return Uint16.fromValue(+this);  }
 
    get algo() {
       switch (this) {

@@ -42,8 +42,7 @@ export class Cipher extends Enum {
       return Cipher.fromValue(copy)
    }
 
-   get Uint16() { return Uint16.fromValue(this.value); }
-   get byte() { return this.Uint16 }
+   get byte() { return Uint16.fromValue(+this) }
    get length() { return 2 }
 
    get hashLength() {

@@ -1,7 +1,6 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/contentype.d.ts"
 
-import { Uint8 } from "./dep.ts";
 import { Enum } from "./enum.js";
 
 /**
@@ -28,10 +27,7 @@ export class ContentType extends Enum {
       return ContentType.fromValue(octet[0]) ?? Error(`Unknown ${octet[0]} ContentType type`);
    }
 
-   get Uint8() {
-      return Uint8.fromValue(+this)
-   }
-   get byte() { return this.Uint8 }
+   get byte() { return Uint8Array.of(+this) }
    get length(){ return 1 }
 
    /**return 8 */

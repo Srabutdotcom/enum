@@ -1,4 +1,3 @@
-import { HexaDecimal } from "../src/dep.ts";
 import { ExtensionType } from "../src/extensiontype.js";
 
 const decoder = new TextDecoder

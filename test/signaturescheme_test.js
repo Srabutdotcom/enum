@@ -11,8 +11,8 @@ for (const e of codes) {
 
 Deno.test("SignatureAlgorithmSchema", () => {
    // Example usage
-   const test = SignatureScheme.ED448.Uint16
-   const back = SignatureScheme.from(test).Uint16;
+   const test = SignatureScheme.ED448.byte
+   const back = SignatureScheme.from(test).byte;
    assertEquals(test, back)
 })
 

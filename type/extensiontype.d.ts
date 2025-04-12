@@ -1,4 +1,4 @@
-import { Uint16, Constrained, Struct } from "../src/dep.ts";
+import { Uint16 } from "../src/dep.ts";
 import { Enum } from "../src/enum.js";
 
 /**

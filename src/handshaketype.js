@@ -1,8 +1,6 @@
 // deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/handshaketype.d.ts"
 import { Enum } from "./enum.js";
-import { Uint8 } from "./dep.ts";
-
 
 /**
  * Represents TLS 1.3 Handshake message types as defined in RFC 8446 Section 4
@@ -101,8 +99,7 @@ export class HandshakeType extends Enum {
    /**return 8 */
    get bit() { return 8 }
    get length() { return 1 }
-   get Uint8() { return Uint8.fromValue(+this) }
-   get byte() { return this.Uint8 }
+   get byte() { return Uint8Array.of(+this) }
 }
 
 

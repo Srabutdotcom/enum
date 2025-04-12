@@ -1,4 +1,4 @@
-export * from "@tls/struct"
+export * from "@aicone/byte"
 export { p256 } from '@noble/curves/p256'
 export { p384 } from '@noble/curves/p384'
 export { p521 } from '@noble/curves/p521'

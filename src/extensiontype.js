@@ -206,10 +206,7 @@ export class ExtensionType extends Enum {
       return ExtensionType.fromValue(value) ?? Error(`Unknown ${value} extension type`);
    }
 
-   get Uint16() {
-      return Uint16.fromValue(+this)
-   }
-   get byte() { return this.Uint16 }
+   get byte() { return Uint16.fromValue(+this) }
 
    /**
     * Bit 16
