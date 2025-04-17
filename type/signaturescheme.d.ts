@@ -4,7 +4,7 @@ import { Enum } from "../src/enum.js";
 /**
  * Enumeration of signature schemes as defined in RFC 8446.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.3
- * @version __VERSION__
+ * @version 0.9.4
  */
 export declare class SignatureScheme extends Enum {
   static RSA_PKCS1_SHA256: SignatureScheme;
