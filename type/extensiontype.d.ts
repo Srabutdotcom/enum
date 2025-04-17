@@ -4,6 +4,7 @@ import { Enum } from "../src/enum.js";
 /**
  * Represents different TLS extension types.
  * Each extension type is associated with a 16-bit value.
+ * @version __VERSION__
  */
 export class ExtensionType extends Enum {
   /** Server Name Indication (SNI) - 0 */

@@ -1,6 +1,7 @@
 /**
  * Represents alert levels in the protocol
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-6
+ * @version __VERSION__
  */
 export class AlertLevel extends Enum {
     /** @type {AlertLevel} warning level (1) */
@@ -22,6 +23,7 @@ export class AlertLevel extends Enum {
 /**
  * Enum class representing various TLS alert descriptions based on RFC 8446.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-6
+ * @version __VERSION__
  */
 export class AlertDescription extends Enum {
     /**
@@ -155,6 +157,9 @@ export class AlertDescription extends Enum {
     get level(): AlertLevel;
     get byte(): Uint8;
 }
+/**
+ * @version __VERSION__
+ */
 export declare class Alert extends Uint8Array {
     /**
      * The alert level (0 for warning, 1 for fatal).

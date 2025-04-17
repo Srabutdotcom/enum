@@ -5,6 +5,7 @@ import { Uint8 } from "../src/dep.ts";
  * Represents TLS Certificate Types.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7
  * @extends {Enum}
+ * @version __VERSION__
  */
 export class CertificateType extends Enum {
   /** Certificate type X.509 */

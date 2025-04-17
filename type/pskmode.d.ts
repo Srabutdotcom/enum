@@ -4,6 +4,7 @@ import { Enum } from "../src/enum.js";
 /**
  * Represents the PskKeyExchangeMode, as defined in RFC 8446, Section 4.4.2.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
+ * @version __VERSION__
  */
 export declare class PskKeyExchangeMode extends Enum {
   /** PSK-only key establishment. The server MUST NOT supply a "key_share" value. */

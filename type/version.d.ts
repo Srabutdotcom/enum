@@ -4,6 +4,7 @@ import { Uint16 } from "../src/dep.ts";
  * Extends Enum to provide constants for SSL and TLS versions.
  *
  * @extends Enum
+ * @version __VERSION__
  */
 export class Version extends Enum {
   /**

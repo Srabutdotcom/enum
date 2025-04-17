@@ -4,6 +4,7 @@ import { Enum } from "../src/enum.js";
 /**
  * Represents a cipher suite used in TLS 1.3.
  * The cipher suite includes the encryption algorithm, mode, and hash function.
+ * @version __VERSION__
  */
 export class Cipher extends Enum {
     /**
