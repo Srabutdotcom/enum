@@ -1,6 +1,6 @@
 /**
  * Represents a bidirectional map where keys and values can be interchanged.
- * @version __VERSION__
+ * @version 0.9.4
  */
 export declare class BiMap {
   constructor();
