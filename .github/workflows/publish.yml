@@ -8,11 +8,40 @@ on:
       - main
 
 jobs:
-  publish:
+  inject-and-publish:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write # The OIDC ID token is used for authentication with JSR.    
     steps:
-      - uses: actions/checkout@v4
-      - run: npx jsr publish --allow-dirty --allow-slow-types
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        # uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        with:
+          deno-version: v2.x
+      
+      - name: Run linter
+        run: deno lint src/ --rules-exclude=no-var, no-explicit-any
+  
+      - name: Run tests
+        run: deno test test/*.js
+
+      - name: Run Inject Version
+        run: deno run --allow-read --allow-write type/version.js
+
+      - name: Commit and push version bump
+        run: |
+          git config --global user.email "handoko75@gmail.com"
+          git config --global user.name "Handoko"
+          # Force add even unchanged files by touching them
+          find type/ -type f -exec touch {} \;
+          git add type/
+          git commit -m "chore: inject version [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Publish to JSR
+        run: npx jsr publish --allow-dirty --allow-slow-types

@@ -1,6 +1,6 @@
 {
   "name": "@tls/enum",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "exports": "./src/mod.ts",
   "publish": {
     "exclude": ["dist/"]
@@ -17,7 +17,7 @@
     }
   },
   "imports": {
-    "@aicone/byte": "jsr:@aicone/byte@^0.8.2",
+    "@aicone/byte": "jsr:@aicone/byte@^0.8.4",
     "@noble/curves": "npm:@noble/curves@^1.8.2",
     "@noble/hashes": "jsr:@noble/hashes@^1.7.2",
     "@peculiar/x509": "npm:@peculiar/x509@^1.12.3",
