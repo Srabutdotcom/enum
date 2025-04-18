@@ -1,4 +1,5 @@
 import { Uint16 } from "../src/dep.ts";
+import { Enum } from "../src/mod.ts";
 /**
  * Version class representing different protocol versions.
  * Extends Enum to provide constants for SSL and TLS versions.
@@ -62,5 +63,3 @@ export class Version extends Enum {
   
 }
 
-
-import { Enum } from "../type/enum.d.ts";
