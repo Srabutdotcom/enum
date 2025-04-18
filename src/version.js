@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-slow-types
 // @ts-self-types="../type/version.d.ts"
 
 import { Enum } from "./enum.js";
