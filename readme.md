@@ -1,6 +1,6 @@
 # JavaScript Enum Implementation
 
-A robust enumeration implementation for JavaScript/TypeScript that provides Java-style enums with additional features for TLS 1.3 protocol definitions.
+A robust enumeration implementation for JavaScript/TypeScript that provides Java-style enums with additional features for TLS 1.3 protocol definitions. @version 0.9.6
 
 ## Features
 

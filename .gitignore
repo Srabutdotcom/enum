@@ -2,3 +2,5 @@
 /deno.lock
 /dist
 /playground
+commit.sh
+version.js 

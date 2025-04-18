@@ -1,19 +1,29 @@
 {
   "name": "@tls/enum",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "exports": "./src/mod.ts",
   "publish": {
-    "exclude": ["dist/"]
+    "exclude": [
+      "dist/"
+    ]
   },
   "tasks": {
     "lint": "deno lint",
     "test": "deno test"
   },
   "lint": {
-    "include": ["src/"],
-    "exclude": ["dist/"],
+    "include": [
+      "src/"
+    ],
+    "exclude": [
+      "dist/"
+    ],
     "rules": {
-      "exclude": ["no-var", "no-explicit-any", "no-slow-types"]
+      "exclude": [
+        "no-var",
+        "no-explicit-any",
+        "no-slow-types"
+      ]
     }
   },
   "imports": {

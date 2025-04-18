@@ -13,7 +13,7 @@
  *   }
  * }
  * ```
- * @version 0.9.4
+ * @version 0.9.6
  */
 export class Enum {
     /**
