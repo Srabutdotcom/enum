@@ -2,5 +2,6 @@
 /deno.lock
 /dist
 /playground
-commit.sh
+./commit.sh
 ./version.js 
+./gitignore

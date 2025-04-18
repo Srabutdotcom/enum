@@ -4,7 +4,7 @@ import { Enum } from "../src/enum.js";
  * Version class representing different protocol versions.
  * Extends Enum to provide constants for SSL and TLS versions.
  *
- * @version 0.9.6
+ * @version 0.9.7
  */
 export class Version extends Enum {
   /**
