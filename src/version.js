@@ -1,13 +1,10 @@
 // @ts-self-types="../type/version.d.ts"
 
-import { Enum } from "./enum.js";
 import { Uint16 } from "./dep.ts";
 
 /**
  * Version class representing different protocol versions.
  * Extends Enum to provide constants for SSL and TLS versions.
- * 
- * @extends {Enum}
  */
 export class Version extends Enum {
 
