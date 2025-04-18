@@ -9,56 +9,54 @@ import { Enum } from "../src/enum.js";
 export class Version extends Enum {
   /**
    * SSL 3.0 version with value 0x0300
-   * @type {Version}
    */
   static SSL30: Version;
+
   /**
    * TLS 1.0 version with value 0x0301
-   * @type {Version}
    */
   static TLS10: Version;
+
   /**
    * TLS 1.1 version with value 0x0302
-   * @type {Version}
    */
   static TLS11: Version;
+
   /**
    * TLS 1.2 version with value 0x0303
-   * @type {Version}
    */
   static TLS12: Version;
+
   /**
    * TLS 1.3 version with value 0x0304
-   * @type {Version}
    */
   static TLS13: Version;
+
   /**
-   * Legacy version representing TLS 1.2 with value 0x0303
-   * @type {Version}
+   * Legacy version representing TLS 1.2
    */
   static legacy: Version;
+
   /**
    * Parses a 2-byte Uint8Array to determine the corresponding Version instance.
-   *
-   * @static
-   * @param {Uint8Array} octet - The 2-byte array representing a version value.
-   * @returns {Version} The matching Version instance.
-   * @throws {Error} If the version type in octet is unknown.
+   * @param octet - The 2-byte array representing a version value.
+   * @returns The matching Version instance.
+   * @throws Error if the version type in octet is unknown.
    */
   static from(octet: Uint8Array): Version;
+
   /**
    * Gets the bit size of the version (16 bits).
-   *
-   * @returns {number} The bit size of the version.
    */
   get bit(): number;
-  get Uint16(): Uint16;
-  get byte(): Uint16;
+
   /**
-   * Returns the byte length
-   * @returns {number} The byte length, which is always 2.
+   * Gets the byte length of the version (2 bytes).
    */
   get length(): number;
-  
-}
 
+  /**
+   * Gets the version as a Uint16 instance.
+   */
+  get byte(): Uint16;
+}

@@ -1,6 +1,7 @@
 // @ts-self-types="../type/version.d.ts"
 
 import { Uint16 } from "./dep.ts";
+import { Enum } from "./enum.js";
 
 /**
  * Version class representing different protocol versions.
@@ -68,6 +69,3 @@ export class Version extends Enum {
 
 }
 
-
-
-// npx -p typescript tsc ./src/version.js --declaration --allowJs --emitDeclarationOnly --lib ESNext --outDir ./dist
