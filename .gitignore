@@ -3,4 +3,4 @@
 /dist
 /playground
 commit.sh
-version.js 
+./version.js 
