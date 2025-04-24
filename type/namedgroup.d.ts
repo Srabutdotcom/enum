@@ -2,7 +2,7 @@ import { Enum } from "./enum.d.ts";
 import { Uint16 } from "../src/dep.ts";
 /**
  * Supported groups - @see https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.7.
- * @version 0.9.8
+ * @version 0.9.9
  */
 export class NamedGroup extends Enum {
   static SECP256R1: NamedGroup;
