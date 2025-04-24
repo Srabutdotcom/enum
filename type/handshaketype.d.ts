@@ -4,7 +4,7 @@ import { Enum } from "../src/enum.js";
 /**
  * Represents TLS 1.3 Handshake message types as defined in RFC 8446 Section 4.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-4
- * @version 0.9.7
+ * @version 0.9.8
  */
 export declare class HandshakeType extends Enum {
   /**
