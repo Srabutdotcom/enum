@@ -1,6 +1,6 @@
 {
   "name": "@tls/enum",
-  "version": "0.9.9",
+  "version": "0.10.0",
   "exports": "./src/mod.ts",
   "publish": {
     "exclude": [

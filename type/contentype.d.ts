@@ -5,7 +5,7 @@ import { Enum } from "../src/enum.js";
  * Represents the higher-level protocol used to process the enclosed fragment.
  * Defined in RFC 8446 Section 5.1.
  * @see https://datatracker.ietf.org/doc/html/rfc8446#section-5.1
- * @version 0.9.9
+ * @version 0.10.0
  */
 export class ContentType extends Enum {
   /** Represents an invalid ContentType (value 0). */

@@ -4,7 +4,7 @@
       should respond with its own KeyUpdate.  If an implementation
       receives any other value, it MUST terminate the connection with an
       "illegal_parameter" alert.
- * @version 0.9.9
+ * @version 0.10.0
  */
 export class KeyUpdateRequest extends Enum {
     static UPDATE_NOT_REQUESTED: KeyUpdateRequest;

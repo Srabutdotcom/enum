@@ -1,7 +1,7 @@
-.vscode/
-deno.lock
-dist/
-playground/
-commit.sh
-version.js 
-.gitignore
+./.vscode/
+./deno.lock
+./dist/
+./playground/
+./commit.sh
+./version.js 
+./.gitignore
